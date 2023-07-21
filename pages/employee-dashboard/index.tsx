@@ -67,7 +67,7 @@ const EmployeeDashboard = () => {
   const handleStartQuiz = (event: React.MouseEvent<HTMLButtonElement>) => {
     const index = event.currentTarget.value;
     localStorage.setItem("quiz-index", index);
-    router.replace("/quiz-page");
+    router.replace("/employee-dashboard/quiz-page");
   };
 
   const cardContent = (count: number, attempt: boolean) => (

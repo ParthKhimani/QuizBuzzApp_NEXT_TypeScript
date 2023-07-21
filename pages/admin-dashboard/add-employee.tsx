@@ -24,6 +24,7 @@ const AddEmployee = () => {
   const handleLogout = () => {
     router.replace("/dashboard");
   };
+
   const handleChange = (event: SelectChangeEvent) => {
     setTechnology(event.target.value as string);
   };
@@ -107,7 +108,6 @@ const AddEmployee = () => {
                 name="password"
                 autoFocus
               />
-
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">
                   Technology

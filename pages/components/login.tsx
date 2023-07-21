@@ -7,6 +7,9 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useRouter } from "next/router";
+import { Grid, Link } from "@mui/material";
+import { useFormik } from "formik";
+import * as yup from "yup";
 
 const defaultTheme = createTheme();
 interface LoginProps {
@@ -17,10 +20,36 @@ const Login: React.FC<LoginProps> = ({ role }) => {
   const [error, setError] = React.useState<string>();
   const router = useRouter();
 
+  const validationSchema = yup.object({
+    emailId: yup
+      .string()
+      .email("Enter a valid email Id")
+      .required("Email is required"),
+    password: yup
+      .string()
+      .min(8, "Password should be of minimum 8 characters length")
+      .required("Password is required"),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      emailId: "",
+      password: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     setData(formData);
+  };
+
+  const handleSignUp = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    router.replace("/employee-dashboard/sign-up");
   };
 
   React.useEffect(() => {
@@ -143,6 +172,10 @@ const Login: React.FC<LoginProps> = ({ role }) => {
               name="emailId"
               autoComplete="email"
               autoFocus
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.emailId && Boolean(formik.errors.emailId)}
+              helperText={formik.touched.emailId && formik.errors.emailId}
             />
             <TextField
               margin="normal"
@@ -153,12 +186,12 @@ const Login: React.FC<LoginProps> = ({ role }) => {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
             />
             <div style={{ color: "red" }}>{error}</div>
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
             <Button
               type="submit"
               fullWidth
@@ -167,13 +200,21 @@ const Login: React.FC<LoginProps> = ({ role }) => {
             >
               Sign In
             </Button>
-            {/* <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-            </Grid> */}
+            <Grid item>
+              {role === "employee" && (
+                <>
+                  Don't have an account?
+                  <Link
+                    underline="hover"
+                    variant="body2"
+                    style={{ cursor: "pointer" }}
+                    onClick={handleSignUp}
+                  >
+                    {" Sign Up"}
+                  </Link>
+                </>
+              )}
+            </Grid>
           </Box>
         </Box>
       </Container>
