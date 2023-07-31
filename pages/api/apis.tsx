@@ -14,10 +14,23 @@ export const getEmployeeData = async () => {
   return employeeData;
 };
 
-export const deleteManagerFn = async () => {
+export const deleteManagerFn = async (
+  event: React.MouseEvent<HTMLButtonElement>
+) => {
+  const data = event.currentTarget.getAttribute("value");
   const response = await fetch(
-    "http://localhost:3333/admin-dashboard/delete-manager-data"
+    "http://localhost:3333/admin-dashboard/delete-manager-data",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: data,
+    }
   );
-  const result = response.json();
+  const result = await response.json();
+  if (result.status === "200") {
+    return getManagerData;
+  }
   return result;
 };

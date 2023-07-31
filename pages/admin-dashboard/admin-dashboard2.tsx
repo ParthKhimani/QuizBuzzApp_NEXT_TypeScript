@@ -58,13 +58,20 @@ const AdminDashboard = ({
   managers,
   employees,
 }: InferGetServerSidePropsType<typeof getStaticProps>) => {
-  const { data } = useQuery({
-    queryKey: ["manager-data"],
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const managerQuery = useQuery({
     queryFn: getManagerData,
+    queryKey: ["managers"],
     initialData: managers,
   });
-
-  const router = useRouter();
+  console.log(managerQuery.data);
+  const deleteManagerMutation = useMutation({
+    mutationFn: deleteManagerFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["managers"]);
+    },
+  });
   const handleLogout = () => {
     router.replace("/dashboard");
   };
@@ -76,25 +83,6 @@ const AdminDashboard = ({
   };
   const handleAddQuiz = () => {
     router.replace("/admin-dashboard/add-quiz");
-  };
-
-  const handleDeleteManager = async (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    const data = event.currentTarget.getAttribute("value");
-    fetch("http://localhost:3333/admin-dashboard/delete-manager-data", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: data,
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.status === "200") {
-          //   fetchData();
-        }
-      });
   };
 
   const handleDeleteEmployee = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -193,32 +181,34 @@ const AdminDashboard = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {managers.map((item: Manager, index) => (
-              <TableRow key={index}>
-                <TableCell>{item.emailId}</TableCell>
-                <TableCell>{item.technology.name}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="outlined"
-                    color="success"
-                    style={{ marginRight: "10px" }}
-                    onClick={handleUpdateManager}
-                    value={JSON.stringify(item)}
-                  >
-                    Update
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    style={{ margin: "10px" }}
-                    onClick={handleDeleteManager}
-                    value={JSON.stringify(item)}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            {managerQuery.data.data?.map(
+              (item: Manager, index: React.Key | null | undefined) => (
+                <TableRow key={index}>
+                  <TableCell>{item.emailId}</TableCell>
+                  <TableCell>{item.technology.name}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outlined"
+                      color="success"
+                      style={{ marginRight: "10px" }}
+                      onClick={handleUpdateManager}
+                      value={JSON.stringify(item)}
+                    >
+                      Update
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      style={{ margin: "10px" }}
+                      onSubmit={deleteManagerMutation.mutate}
+                      value={JSON.stringify(item)}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              )
+            )}
           </TableBody>
         </Table>
       </TableContainer>
