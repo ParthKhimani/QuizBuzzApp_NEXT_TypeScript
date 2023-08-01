@@ -14,10 +14,8 @@ export const getEmployeeData = async () => {
   return employeeData;
 };
 
-export const deleteManagerFn = async (
-  event: React.MouseEvent<HTMLButtonElement>
-) => {
-  const data = event.currentTarget.getAttribute("value");
+export const deleteManagerFn = async (managerJSONString: string) => {
+  const data = managerJSONString;
   const response = await fetch(
     "http://localhost:3333/admin-dashboard/delete-manager-data",
     {
@@ -25,12 +23,77 @@ export const deleteManagerFn = async (
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
-      body: data,
+      body: JSON.stringify(data),
     }
   );
   const result = await response.json();
   if (result.status === "200") {
-    return getManagerData;
+    return result;
   }
+};
+
+export const deleteEmployeeFn = async (employeeJSONString: string) => {
+  const data = employeeJSONString;
+  const response = await fetch(
+    "http://localhost:3333/admin-dashboard/delete-employee-data",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify(data),
+    }
+  );
+  const result = await response.json();
+  if (result.status === "200") {
+    return result;
+  }
+};
+
+export const updateManagerFn = async (formData: FormData) => {
+  const response = await fetch("http://localhost:3333/update-manager", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify(Object.fromEntries(formData)),
+  });
+  const result = await response.json();
+  return result;
+};
+
+export const UpdateEmployeeFn = async (formData: FormData) => {
+  const response = await fetch("http://localhost:3333/update-employee", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify(Object.fromEntries(formData)),
+  });
+  const result = await response.json();
+  return result;
+};
+
+export const AddManagerFn = async (formData: FormData) => {
+  const response = await fetch("http://localhost:3333/add-manager", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify(Object.fromEntries(formData)),
+  });
+  const result = await response.json();
+  return result;
+};
+
+export const AddEmployeeFn = async (formData: FormData) => {
+  const response = await fetch("http://localhost:3333/add-employee", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify(Object.fromEntries(formData)),
+  });
+  const result = await response.json();
   return result;
 };

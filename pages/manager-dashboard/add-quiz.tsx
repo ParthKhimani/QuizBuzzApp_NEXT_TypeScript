@@ -24,6 +24,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
+// import { Option, Question, Technology, Manager, Employee } from "@/types";
 
 interface Option {
   id: number;
@@ -54,11 +55,6 @@ interface Employee {
   technology: Technology;
 }
 
-interface Quiz {
-  questions: Question[];
-  employee: string;
-}
-
 const AddQuiz: React.FC = () => {
   const router = useRouter();
   const [openSuccess, setOpenSuccess] = React.useState(false);
@@ -68,9 +64,8 @@ const AddQuiz: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [currentAnswer, setCurrentAnswer] = useState("");
-  const [employee, setEmployee] = useState("");
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [quiz, setQuiz] = useState<Quiz[]>([]);
+  const [technology, setTechnology] = useState("");
+  const [technologies, setTechnologies] = useState<Technology[]>([]);
   const [options, setOptions] = useState<Option[]>([
     { id: 1, value: "" },
     { id: 2, value: "" },
@@ -79,20 +74,16 @@ const AddQuiz: React.FC = () => {
   ]);
 
   useEffect(() => {
-    fetch("http://localhost:3333/get-employees", {
+    fetch("http://localhost:3333/get-technologies", {
       method: "GET",
     })
       .then((response) => response.json())
       .then((result) => {
         if (result.status === "200") {
-          setEmployees(result.employees);
+          setTechnologies(result.technologies);
         }
       });
   }, []);
-
-  const handleLogout = () => {
-    router.replace("/dashboard");
-  };
 
   const handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentQuestion(event.target.value);
@@ -181,21 +172,15 @@ const AddQuiz: React.FC = () => {
   };
 
   const handleSaveQuiz = () => {
-    if (questions.length === 0 || employee === "") {
+    if (questions.length === 0 || technology === "") {
       setQuizOpenError(true);
     } else {
-      setQuiz((prevQuiz) => [...prevQuiz, { questions, employee }]);
-    }
-  };
-
-  useEffect(() => {
-    if (quiz.length > 0) {
       fetch("http://localhost:3333/add-quiz", {
         method: "POST",
         headers: {
           "Content-Type": "application/json;charset=utf-8",
         },
-        body: JSON.stringify({ questions, employee }),
+        body: JSON.stringify({ questions, technology }),
       })
         .then((response) => response.json())
         .then((result) => {
@@ -206,7 +191,7 @@ const AddQuiz: React.FC = () => {
           }
         });
     }
-  }, [quiz]);
+  };
 
   const handleDeleteQuestion = (questionId: number) => {
     console.log(questionId);
@@ -223,12 +208,12 @@ const AddQuiz: React.FC = () => {
 
   const handleClearQuiz = () => {
     setQuestions([]);
-    setEmployee("");
+    setTechnology("");
   };
 
-  const handleEmployeeChange = (event: SelectChangeEvent) => {
-    const employee = event.target.value;
-    setEmployee(employee as string);
+  const handleTechnologyChange = (event: SelectChangeEvent) => {
+    const technology = event.target.value;
+    setTechnology(technology as string);
   };
 
   return (
@@ -239,7 +224,12 @@ const AddQuiz: React.FC = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Welcome Manager
           </Typography>
-          <Button color="inherit" onClick={handleLogout}>
+          <Button
+            color="inherit"
+            onClick={() => {
+              router.replace("/dashboard");
+            }}
+          >
             sign out
           </Button>
         </Toolbar>
@@ -335,7 +325,6 @@ const AddQuiz: React.FC = () => {
             </Alert>
           </Snackbar>
           <Button
-            type="submit"
             variant="outlined"
             onClick={() => {
               router.replace("/manager-dashboard");
@@ -359,22 +348,18 @@ const AddQuiz: React.FC = () => {
           </Typography>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">
-              Choose Employee
+              Choose Technology
             </InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={employee}
+              value={technology}
               label="Choose Employee"
               name="employee"
-              onChange={handleEmployeeChange}
+              onChange={handleTechnologyChange}
             >
-              {employees.map((employee) => (
-                <MenuItem value={employee.emailId}>
-                  <>
-                    {employee.emailId}({employee.technology.name})
-                  </>
-                </MenuItem>
+              {technologies.map((technology) => (
+                <MenuItem value={technology.name}>{technology.name}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -471,7 +456,7 @@ const AddQuiz: React.FC = () => {
               sx={{ width: "100%" }}
               variant="filled"
             >
-              Quiz Alert sent to Candidate !
+              Quiz Alert sent to all the Candidates !
             </Alert>
           </Snackbar>
         </Box>

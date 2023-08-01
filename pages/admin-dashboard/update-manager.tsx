@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -13,56 +13,35 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useRouter } from "next/router";
 import { AppBar, Toolbar } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
+import { updateManagerFn } from "../api/apis";
 
 const defaultTheme = createTheme();
 
 const UpdateManager = () => {
-  const [technology, setTechnology] = React.useState("");
-  const [error, setError] = React.useState<string>();
+  const [technology, setTechnology] = useState("");
   const router = useRouter();
-
-  const handleLogout = () => {
-    router.replace("/dashboard");
-  };
-
-  React.useEffect(() => {
-    if (!router.isReady) {
-      return;
-    }
-  }, [router.isReady]);
-
   const managerData = JSON.parse(router.query.data as string);
 
   const handleChange = (event: SelectChangeEvent) => {
     setTechnology(event.target.value as string);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    fetch("http://localhost:3333/update-manager", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify(Object.fromEntries(formData)),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        setError("");
-        switch (result.status) {
-          case "200":
-            router.replace("/admin-dashboard");
-            break;
+    const result = await updateManagerFn(formData);
+    switch (result.status) {
+      case "200":
+        router.replace("/admin-dashboard");
+        break;
 
-          case "202":
-            router.replace("/admin-dashboard");
-            break;
-        }
-      });
+      case "202":
+        router.replace("/admin-dashboard");
+        break;
+    }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (managerData) {
       setTechnology(managerData.technology.name);
     }
@@ -76,7 +55,12 @@ const UpdateManager = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Welcome Admin
           </Typography>
-          <Button color="inherit" onClick={handleLogout}>
+          <Button
+            color="inherit"
+            onClick={() => {
+              router.replace("/dashboard");
+            }}
+          >
             sign out
           </Button>
         </Toolbar>
@@ -143,7 +127,6 @@ const UpdateManager = () => {
                   <MenuItem value={"iOS"}>iOS</MenuItem>
                 </Select>
               </FormControl>
-              <div style={{ color: "red" }}>{error}</div>
               <Button
                 type="submit"
                 fullWidth

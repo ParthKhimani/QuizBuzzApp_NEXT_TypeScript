@@ -13,6 +13,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { AppBar, Toolbar } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
+import { AddEmployeeFn } from "../api/apis";
 
 const defaultTheme = createTheme();
 
@@ -21,40 +22,26 @@ const AddEmployee = () => {
   const [error, setError] = React.useState<string>();
   const router = useRouter();
 
-  const handleLogout = () => {
-    router.replace("/dashboard");
-  };
-
   const handleChange = (event: SelectChangeEvent) => {
     setTechnology(event.target.value as string);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    fetch("http://localhost:3333/add-employee", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify(Object.fromEntries(formData)),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        setError("");
-        switch (result.status) {
-          case "200":
-            router.replace("/admin-dashboard");
-            break;
-          case "400":
-            setError("Employee is already assigned to another technology !");
-            break;
+    const result = await AddEmployeeFn(formData);
+    switch (result.status) {
+      case "200":
+        router.replace("/admin-dashboard");
+        break;
+      case "400":
+        setError("Employee is already assigned to another technology !");
+        break;
 
-          case "402":
-            setError("Employee is already assigned to that technology once!");
-            break;
-        }
-      });
+      case "402":
+        setError("Employee is already assigned to that technology once!");
+        break;
+    }
   };
 
   return (
@@ -65,7 +52,12 @@ const AddEmployee = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Welcome Admin
           </Typography>
-          <Button color="inherit" onClick={handleLogout}>
+          <Button
+            color="inherit"
+            onClick={() => {
+              router.replace("/dashboard");
+            }}
+          >
             sign out
           </Button>
         </Toolbar>

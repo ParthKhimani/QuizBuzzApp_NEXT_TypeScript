@@ -24,6 +24,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
+// import { Option, Question, Technology, Manager, Employee } from "@/types";
 
 interface Option {
   id: number;
@@ -83,10 +84,6 @@ const AddQuiz: React.FC = () => {
         }
       });
   }, []);
-
-  const handleLogout = () => {
-    router.replace("/dashboard");
-  };
 
   const handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentQuestion(event.target.value);
@@ -227,7 +224,12 @@ const AddQuiz: React.FC = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Welcome Admin
           </Typography>
-          <Button color="inherit" onClick={handleLogout}>
+          <Button
+            color="inherit"
+            onClick={() => {
+              router.replace("/dashboard");
+            }}
+          >
             sign out
           </Button>
         </Toolbar>

@@ -13,51 +13,32 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { AppBar, Toolbar } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
+import { UpdateEmployeeFn } from "../api/apis";
 
 const defaultTheme = createTheme();
 
 const UpdateEmployee = () => {
   const [technology, setTechnology] = React.useState("");
-  const [error, setError] = React.useState<string>();
   const router = useRouter();
-
-  React.useEffect(() => {
-    if (!router.isReady) {
-      return;
-    }
-  }, [router.isReady]);
   const employeeData = JSON.parse(router.query.data as string);
 
-  const handleLogout = () => {
-    router.replace("/dashboard");
-  };
   const handleChange = (event: SelectChangeEvent) => {
     setTechnology(event.target.value as string);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    fetch("http://localhost:3333/update-employee", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify(Object.fromEntries(formData)),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        setError("");
-        switch (result.status) {
-          case "200":
-            router.replace("/manager-dashboard");
-            break;
+    const result = await UpdateEmployeeFn(formData);
+    switch (result.status) {
+      case "200":
+        router.replace("/manager-dashboard");
+        break;
 
-          case "202":
-            router.replace("/manager-dashboard");
-            break;
-        }
-      });
+      case "202":
+        router.replace("/manager-dashboard");
+        break;
+    }
   };
 
   React.useEffect(() => {
@@ -72,9 +53,14 @@ const UpdateEmployee = () => {
         <Toolbar>
           <QuizIcon style={{ margin: "0px 10px" }} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Welcome Manager
+            Welcome Admin
           </Typography>
-          <Button color="inherit" onClick={handleLogout}>
+          <Button
+            color="inherit"
+            onClick={() => {
+              router.replace("/dashboard");
+            }}
+          >
             sign out
           </Button>
         </Toolbar>
@@ -141,7 +127,6 @@ const UpdateEmployee = () => {
                   <MenuItem value={"iOS"}>iOS</MenuItem>
                 </Select>
               </FormControl>
-              <div style={{ color: "red" }}>{error}</div>
               <Button
                 type="submit"
                 fullWidth

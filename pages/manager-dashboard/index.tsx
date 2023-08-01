@@ -1,4 +1,3 @@
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,56 +14,43 @@ import {
   TableRow,
 } from "@mui/material";
 import { useRouter } from "next/router";
+import { Quiz, Employee } from "@/types";
+import { GetStaticProps, InferGetServerSidePropsType } from "next";
+import { deleteEmployeeFn, getEmployeeData } from "../api/apis";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-interface Technology {
-  name: String;
-  managers: Manager[];
-}
+export const getStaticProps: GetStaticProps<{
+  employees: Employee[];
+}> = async () => {
+  const employeeData = await getEmployeeData();
+  return {
+    props: {
+      employees: employeeData.data,
+    },
+    revalidate: 5,
+  };
+};
 
-interface Manager {
-  emailId: String;
-  technology: Technology;
-}
-
-interface Quiz {
-  score: number;
-  attempted: boolean;
-  scoreGained: number;
-}
-
-interface Employee {
-  emailId: String;
-  technology: Technology;
-  quizes: Quiz[];
-}
-
-const ManagerDashboard = () => {
+const ManagerDashboard = ({
+  employees,
+}: InferGetServerSidePropsType<typeof getStaticProps>) => {
   const router = useRouter();
-  const [data2, setData2] = React.useState<Employee[]>([]);
-  const handleLogout = () => {
-    router.replace("/dashboard");
-  };
-  const handleAddEmployee = () => {
-    router.replace("/manager-dashboard/add-employee");
-  };
-  const handleAddQuiz = () => {
-    router.replace("/manager-dashboard/add-quiz");
-  };
+  const queryClient = useQueryClient();
 
-  const fetchData2 = () => {
-    fetch("http://localhost:3333/admin-dashboard/employee-data", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
+  const employeeQuery = useQuery({
+    queryFn: getEmployeeData,
+    queryKey: ["employees"],
+    initialData: employees,
+  });
+
+  const deleteEmployeeMutation = useMutation(
+    (employeeJSONString: string) => deleteEmployeeFn(employeeJSONString),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["employees"]);
       },
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        if (Array.isArray(result.data)) {
-          setData2(result.data);
-        }
-      });
-  };
+    }
+  );
 
   const handleUpdateEmployee = (event: React.MouseEvent<HTMLButtonElement>) => {
     const data = event.currentTarget.getAttribute("value");
@@ -73,26 +59,6 @@ const ManagerDashboard = () => {
       query: { data },
     });
   };
-  const handleDeleteEmployee = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const data = event.currentTarget.getAttribute("value");
-    fetch("http://localhost:3333/admin-dashboard/delete-employee-data", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: data,
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.status === "200") {
-          fetchData2();
-        }
-      });
-  };
-
-  React.useEffect(() => {
-    fetchData2();
-  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -102,7 +68,12 @@ const ManagerDashboard = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Welcome Manager
           </Typography>
-          <Button color="inherit" onClick={handleLogout}>
+          <Button
+            color="inherit"
+            onClick={() => {
+              router.replace("/dashboard");
+            }}
+          >
             sign out
           </Button>
         </Toolbar>
@@ -113,14 +84,18 @@ const ManagerDashboard = () => {
         <Button
           variant="outlined"
           style={{ margin: "10px" }}
-          onClick={handleAddEmployee}
+          onClick={() => {
+            router.replace("/manager-dashboard/add-employee");
+          }}
         >
           Add Employee
         </Button>
         <Button
           variant="outlined"
           style={{ margin: "10px" }}
-          onClick={handleAddQuiz}
+          onClick={() => {
+            router.replace("/manager-dashboard/add-quiz");
+          }}
         >
           Add Quiz
         </Button>
@@ -148,7 +123,7 @@ const ManagerDashboard = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data2.map((item: Employee) => (
+            {employeeQuery.data.data?.map((item: Employee) => (
               <TableRow>
                 <TableCell>{item.emailId}</TableCell>
                 <TableCell>{item.technology.name}</TableCell>
@@ -173,8 +148,9 @@ const ManagerDashboard = () => {
                     variant="outlined"
                     color="error"
                     style={{ margin: "10px" }}
-                    onClick={handleDeleteEmployee}
-                    value={JSON.stringify(item)}
+                    onClick={() => {
+                      deleteEmployeeMutation.mutate(JSON.stringify(item));
+                    }}
                   >
                     Delete
                   </Button>
