@@ -1,10 +1,12 @@
 export interface Technology {
-  name: String;
+  name: string;
   managers: Manager[];
+  employees: Employee[];
 }
 
 export interface Manager {
-  emailId: String;
+  emailId: string;
+  password: string;
   technology: Technology;
 }
 
@@ -15,7 +17,7 @@ export interface Quiz {
 }
 
 export interface Employee {
-  emailId: String;
+  emailId: string;
   technology: Technology;
   quizes: Quiz[];
 }
@@ -29,5 +31,28 @@ export interface Question {
   id: number;
   question: string;
   options: { id: number; value: string }[];
+  answer: string;
+}
+
+export interface QuizForEmployees {
+  questions: Question[];
+  employee: {
+    quizes: {
+      questions: Question[];
+    }[];
+  };
+}
+
+export interface Quizes {
+  quiz: QuizForEmployees;
+  score: number;
+  attempted: boolean;
+  scoreGained: number;
+  answers: Answer[];
+}
+
+export interface Answer {
+  _id?: string;
+  index: number;
   answer: string;
 }

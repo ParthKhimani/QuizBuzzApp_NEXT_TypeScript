@@ -199,7 +199,10 @@ const AdminDashboard = ({
       <br />
       <TableContainer
         component={Paper}
-        style={{ width: "75%", margin: "auto" }}
+        style={{
+          width: "75%",
+          margin: "auto",
+        }}
       >
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>
@@ -214,15 +217,19 @@ const AdminDashboard = ({
             {employeeQuery.data.data?.map(
               (item: Employee, index: React.Key | null | undefined) => (
                 <TableRow key={index}>
-                  <TableCell>{item.emailId}</TableCell>
-                  <TableCell>{item.technology.name}</TableCell>
-                  <TableCell>
-                    {item.quizes.map((quiz: Quiz, index: number) => (
-                      <div key={index}>
-                        Quiz {index + 1}: {quiz.scoreGained}/{quiz.score}
-                      </div>
-                    ))}
+                  <TableCell rowSpan={employeeQuery.data.data?.length}>
+                    {item.emailId}
                   </TableCell>
+                  <TableCell rowSpan={employeeQuery.data.data?.length}>
+                    {item.technology.name}
+                  </TableCell>
+                  {item.quizes.map((quiz: Quiz, index: number) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        Quiz {index + 1}: {quiz.scoreGained}/{quiz.score}
+                      </TableCell>
+                    </TableRow>
+                  ))}
                   <TableCell>
                     <Button
                       variant="outlined"

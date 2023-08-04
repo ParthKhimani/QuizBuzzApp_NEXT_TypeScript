@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -10,14 +10,15 @@ import { useRouter } from "next/router";
 import { Grid, Link } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { AdminLoginFn, ManagerLoginFn, EmployeeLoginFn } from "../api/apis";
 
 const defaultTheme = createTheme();
+
 interface LoginProps {
   role: string;
 }
 const Login: React.FC<LoginProps> = ({ role }) => {
-  const [data, setData] = React.useState<FormData>();
-  const [error, setError] = React.useState<string>();
+  const [error, setError] = useState<string>();
   const router = useRouter();
 
   const validationSchema = yup.object({
@@ -42,105 +43,62 @@ const Login: React.FC<LoginProps> = ({ role }) => {
     },
   });
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    setData(formData);
+    if (role === "admin") {
+      const AdminLoginData = await AdminLoginFn(formData);
+      switch (AdminLoginData.status) {
+        case "303":
+          router.replace("/admin-dashboard");
+          break;
+
+        case "404":
+          setError("*Email id Not Registered as an admin!");
+          break;
+
+        case "400":
+          setError("*Incorrect Password!");
+          break;
+      }
+    }
+    if (role === "manager") {
+      const ManagerLoginData = await ManagerLoginFn(formData);
+      switch (ManagerLoginData.status) {
+        case "303":
+          router.replace("/manager-dashboard");
+          break;
+
+        case "404":
+          setError("*Email id Not Registered as an manager!");
+          break;
+
+        case "400":
+          setError("*Incorrect Password!");
+          break;
+      }
+    }
+    if (role === "employee") {
+      const EmployeeLoginData = await EmployeeLoginFn(formData);
+      switch (EmployeeLoginData.status) {
+        case "303":
+          router.replace("/employee-dashboard");
+          break;
+
+        case "404":
+          setError("*Email id Not Registered as an employee!");
+          break;
+
+        case "400":
+          setError("*Incorrect Password!");
+          break;
+      }
+    }
   };
 
   const handleSignUp = (event: React.MouseEvent<HTMLAnchorElement>) => {
     router.replace("/employee-dashboard/sign-up");
   };
-
-  React.useEffect(() => {
-    if (data) {
-      //fetching admin-login API
-      if (role === "admin") {
-        fetch("http://localhost:3333/admin-login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-          },
-          body: JSON.stringify(Object.fromEntries(data)),
-        })
-          .then((response) => response.json())
-          .then((result) => {
-            setError("");
-            switch (result.status) {
-              case "303":
-                router.replace("/admin-dashboard");
-                break;
-
-              case "404":
-                setError("*Email id Not Registered as an admin!");
-                break;
-
-              case "400":
-                setError("*Incorrect Password!");
-                break;
-            }
-          });
-      }
-      //fetching manager-login API
-      if (role === "manager") {
-        fetch("http://localhost:3333/manager-login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-          },
-          body: JSON.stringify(Object.fromEntries(data)),
-        })
-          .then((response) => response.json())
-          .then((result) => {
-            setError("");
-            switch (result.status) {
-              case "303":
-                router.replace("/manager-dashboard");
-                break;
-
-              case "404":
-                setError("*Email id Not Registered as a manager!");
-                break;
-
-              case "400":
-                setError("*Incorrect Password!");
-                break;
-            }
-          });
-      }
-      //fetching employee-login API
-      if (role === "employee") {
-        fetch("http://localhost:3333/employee-login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-          },
-          body: JSON.stringify(Object.fromEntries(data)),
-        })
-          .then((response) => response.json())
-          .then((result) => {
-            setError("");
-            switch (result.status) {
-              case "303":
-                router.replace("/employee-dashboard");
-                localStorage.setItem(
-                  "employee",
-                  JSON.stringify(data.get("emailId"))
-                );
-                break;
-
-              case "404":
-                setError("*Email id Not Registered as an employee!");
-                break;
-
-              case "400":
-                setError("*Incorrect Password!");
-                break;
-            }
-          });
-      }
-    }
-  }, [data]);
 
   return (
     <ThemeProvider theme={defaultTheme}>

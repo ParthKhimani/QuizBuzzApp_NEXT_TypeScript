@@ -6,23 +6,9 @@ import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-
-interface Option {
-  id?: number;
-  value: string;
-}
-
-interface Question {
-  id?: number;
-  question: string;
-  options: Option[];
-  answer?: string;
-}
-
-interface Answer {
-  index: number;
-  answer: string;
-}
+import { Question, Answer } from "@/types";
+// import { useQuery } from "@tanstack/react-query";
+// import { GetQuizDataFn } from "../api/apis";
 
 const QuizPage = () => {
   const router = useRouter();
@@ -35,9 +21,6 @@ const QuizPage = () => {
     question: questionObject.question,
     options: questionObject.options.map((options) => options),
   }));
-  const handleLogout = () => {
-    router.replace("/dashboard");
-  };
 
   useEffect(() => {
     fetch("http://localhost:3333/get-quiz-data", {
@@ -55,6 +38,14 @@ const QuizPage = () => {
         setQuestions(result.quiz.questions);
       });
   }, []);
+
+  // const quizQuery = useQuery({
+  //   queryKey: ["quiz", quizIndex, employee],
+  //   queryFn: () => {
+  //     GetQuizDataFn(quizIndex!,employee!);
+  //   },
+  //   refetchInterval: 300000,
+  // });
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -90,9 +81,7 @@ const QuizPage = () => {
           answers: answers,
           employee: JSON.parse(employee!),
         }),
-      })
-        .then((response) => response.json())
-        .then((result) => console.log(result));
+      });
     } else {
       setError("*Please attempt all the questions!");
     }
@@ -115,16 +104,29 @@ const QuizPage = () => {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Quiz {quizIndex}
             </Typography>
-            <Button color="inherit" onClick={handleLogout}>
+            <Button
+              color="inherit"
+              onClick={() => {
+                router.replace("/dashboard");
+              }}
+            >
               sign out
             </Button>
           </Toolbar>
         </AppBar>
       </Box>
-      <Box sx={{ marginTop: "64px" }}>
+      <Box
+        sx={{
+          width: "75%",
+          margin: "80px auto",
+          boxShadow: 8,
+          padding: "20px",
+          borderRadius: "10px",
+        }}
+      >
         {questionValue.map((questionObj, index) => (
           <>
-            <Typography variant="h6" component="div" color="#2196f3">
+            <Typography variant="h5" component="div" color="#2196f3">
               {index + 1}. {questionObj.question}
             </Typography>
             <FormControl>
@@ -147,22 +149,22 @@ const QuizPage = () => {
             <hr />
           </>
         ))}
+        <span style={{ color: "red", display: "block", margin: "10px" }}>
+          {error}
+        </span>
+        <Button
+          type="submit"
+          variant="contained"
+          color="success"
+          style={{
+            width: "15%",
+            margin: "10px",
+          }}
+          onClick={handleSubmit}
+        >
+          Submit
+        </Button>
       </Box>
-      <span style={{ color: "red", display: "block", margin: "10px" }}>
-        {error}
-      </span>
-      <Button
-        type="submit"
-        variant="contained"
-        color="success"
-        style={{
-          width: "15%",
-          margin: "10px",
-        }}
-        onClick={handleSubmit}
-      >
-        Submit
-      </Button>
     </>
   );
 };

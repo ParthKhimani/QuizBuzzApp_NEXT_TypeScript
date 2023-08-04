@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -24,43 +24,14 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
-// import { Option, Question, Technology, Manager, Employee } from "@/types";
-
-interface Option {
-  id: number;
-  value: string;
-}
-
-interface Question {
-  id: number;
-  question: string;
-  options: { id: number; value: string }[];
-  answer: string;
-}
-
-interface Technology {
-  name: string;
-  managers: Manager[];
-  employees: Employee[];
-}
-
-interface Manager {
-  emailId: String;
-  password: String;
-  technology: Technology;
-}
-
-interface Employee {
-  emailId: string;
-  technology: Technology;
-}
+import { Option, Question, Technology } from "@/types";
 
 const AddQuiz: React.FC = () => {
   const router = useRouter();
-  const [openSuccess, setOpenSuccess] = React.useState(false);
-  const [openError, setOpenError] = React.useState(false);
-  const [quizOpenError, setQuizOpenError] = React.useState(false);
-  const [emailOpenSuccess, setEmailOpenSuccess] = React.useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [quizOpenError, setQuizOpenError] = useState(false);
+  const [emailOpenSuccess, setEmailOpenSuccess] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [currentAnswer, setCurrentAnswer] = useState("");

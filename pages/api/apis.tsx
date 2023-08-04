@@ -97,3 +97,68 @@ export const AddEmployeeFn = async (formData: FormData) => {
   const result = await response.json();
   return result;
 };
+
+export const GetQuizFn = async () => {
+  const employee = localStorage.getItem("employee");
+  const response = await fetch("http://localhost:3333/get-quiz", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify({ employee: JSON.parse(employee!) }),
+  });
+  const result = await response.json();
+  return result;
+};
+
+export const AdminLoginFn = async (formData: FormData) => {
+  console.log(formData);
+  const AdminResponse = await fetch("http://localhost:3333/admin-login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify(Object.fromEntries(formData)),
+  });
+  const AdminLoginData = await AdminResponse.json();
+  return AdminLoginData;
+};
+
+export const ManagerLoginFn = async (formData: FormData) => {
+  const ManagerResponse = await fetch("http://localhost:3333/manager-login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify(Object.fromEntries(formData)),
+  });
+  const ManagerLoginData = await ManagerResponse.json();
+  return ManagerLoginData;
+};
+
+export const EmployeeLoginFn = async (formData: FormData) => {
+  const EmployeeResponse = await fetch("http://localhost:3333/admin-login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify(Object.fromEntries(formData)),
+  });
+  const EmployeeLoginData = await EmployeeResponse.json();
+  return EmployeeLoginData;
+};
+
+export const GetQuizDataFn = async (quizIndex: string, employee: string) => {
+  const quiz = await fetch("http://localhost:3333/get-quiz-data", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify({
+      index: quizIndex,
+      employee: JSON.parse(employee!),
+    }),
+  });
+  const quizData = await quiz.json();
+  return quizData;
+};

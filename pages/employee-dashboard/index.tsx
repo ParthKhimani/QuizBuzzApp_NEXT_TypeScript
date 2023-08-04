@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -9,65 +9,38 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import { useRouter } from "next/router";
-
-interface Option {
-  id?: number;
-  value: string;
-}
-
-interface Question {
-  id?: number;
-  question: string;
-  options: Option[];
-  answer?: string;
-}
-
-interface Quiz {
-  questions: Question[];
-  employee: {
-    quizes: {
-      questions: Question[];
-    }[];
-  };
-}
-
-interface Quizes {
-  quiz: Quiz;
-  score: number;
-  attempted: boolean;
-}
+import { GetQuizFn } from "../api/apis";
+import { useQuery } from "@tanstack/react-query";
+import { Quizes } from "@/types";
+import HighChart from "../components/high-chart";
 
 const EmployeeDashboard = () => {
   const router = useRouter();
-  const employee = localStorage.getItem("employee");
   const [quizCount, setQuizCount] = useState<number>(0);
   const [technology, setTechnology] = useState<string>();
   const [quizes, setQuizes] = useState<Quizes[]>([]);
 
-  useEffect(() => {
-    fetch("http://localhost:3333/get-quiz", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify({ employee: JSON.parse(employee!) }),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        setQuizes(result.quiz.quizes);
-        setQuizCount(result.quiz.quizes!.length);
-        setTechnology(result.quiz.technology.name);
-      });
-  }, []);
-
-  const handleLogout = () => {
-    router.replace("/dashboard");
-  };
+  const quizDataQuery = useQuery({
+    queryKey: ["quiz"],
+    queryFn: GetQuizFn,
+    onSuccess: (data) => {
+      setQuizes(data.quiz.quizes);
+      setQuizCount(data.quiz.quizes!.length);
+      setTechnology(data.quiz.technology.name);
+    },
+    refetchInterval: 1000,
+  });
 
   const handleStartQuiz = (event: React.MouseEvent<HTMLButtonElement>) => {
     const index = event.currentTarget.value;
     localStorage.setItem("quiz-index", index);
     router.replace("/employee-dashboard/quiz-page");
+  };
+
+  const handleCheckAnswers = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const index = event.currentTarget.value;
+    localStorage.setItem("quiz-index", index);
+    router.replace("/employee-dashboard/check-answers");
   };
 
   const cardContent = (count: number, attempt: boolean) => (
@@ -85,8 +58,8 @@ const EmployeeDashboard = () => {
         </Typography>
       </CardContent>
       <hr />
-      <CardActions>
-        {!attempt && (
+      {!attempt && (
+        <CardActions>
           <Button
             sx={{
               width: "100%",
@@ -97,13 +70,27 @@ const EmployeeDashboard = () => {
           >
             Start Quiz
           </Button>
-        )}
-        {attempt && (
-          <Typography style={{ margin: "5px", width: "100%" }}>
-            Quiz Submitted
+        </CardActions>
+      )}
+      {attempt && (
+        <>
+          <Typography sx={{ fontSize: 16, textAlign: "center" }} gutterBottom>
+            Score : {quizes[count - 1].scoreGained}/{quizes[count - 1].score}
           </Typography>
-        )}
-      </CardActions>
+          <hr />
+          <Button
+            sx={{
+              width: "100%",
+              color: "white",
+            }}
+            size="medium"
+            onClick={handleCheckAnswers}
+            value={count}
+          >
+            Check Answers
+          </Button>
+        </>
+      )}
     </>
   );
 
@@ -118,8 +105,13 @@ const EmployeeDashboard = () => {
         <Card
           key={i}
           variant="outlined"
-          sx={{ boxShadow: 8, backgroundColor: backgroundColor, color: color }}
-          style={{ margin: "15px", borderRadius: "10px" }}
+          sx={{
+            boxShadow: 8,
+            backgroundColor: backgroundColor,
+            color: color,
+            margin: "15px",
+            borderRadius: "10px",
+          }}
         >
           {cardContent(i, attempt)}
         </Card>
@@ -149,7 +141,12 @@ const EmployeeDashboard = () => {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Welcome Candidate
             </Typography>
-            <Button color="inherit" onClick={handleLogout}>
+            <Button
+              color="inherit"
+              onClick={() => {
+                router.replace("/dashboard");
+              }}
+            >
               sign out
             </Button>
           </Toolbar>
@@ -162,11 +159,27 @@ const EmployeeDashboard = () => {
           No. of quizzes assigned to you: {quizCount}
         </Typography>
       </div>
+      {quizDataQuery.isLoading && (
+        <Typography
+          variant="h3"
+          component="div"
+          color="#2196f3"
+          style={{ textAlign: "center" }}
+        >
+          Please Wait...
+        </Typography>
+      )}
       <div
-        style={{ display: "flex", justifyContent: "center", margin: "10px" }}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          margin: "10px",
+        }}
       >
         {renderCards()}
       </div>
+      <hr />
+      <HighChart data={quizes} />
     </>
   );
 };
