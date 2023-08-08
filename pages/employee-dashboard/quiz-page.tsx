@@ -4,48 +4,30 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { Question, Answer } from "@/types";
-// import { useQuery } from "@tanstack/react-query";
-// import { GetQuizDataFn } from "../api/apis";
+import { useQuery } from "@tanstack/react-query";
+import { GetQuizDataFn } from "../api/apis";
 
 const QuizPage = () => {
   const router = useRouter();
   const [answers, setAnswers] = useState<Answer[]>([]);
-  const [questions, setQuestions] = useState([]);
   const [error, setError] = useState("");
-  const quizIndex = localStorage.getItem("quiz-index");
-  const employee = localStorage.getItem("employee");
-  const questionValue = questions.map((questionObject: Question) => ({
-    question: questionObject.question,
-    options: questionObject.options.map((options) => options),
-  }));
+  const quizIndex = String(router.query.quizIndex);
+  const employee = String(router.query.employee);
 
-  useEffect(() => {
-    fetch("http://localhost:3333/get-quiz-data", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify({
-        index: quizIndex,
-        employee: JSON.parse(employee!),
-      }),
+  const quizQuery = useQuery({
+    queryKey: ["quiz", quizIndex, employee],
+    queryFn: () => GetQuizDataFn(quizIndex, employee),
+  });
+
+  const questionValue: Question[] = quizQuery.data?.quiz?.questions?.map(
+    (questionObject: Question) => ({
+      question: questionObject.question,
+      options: questionObject.options.map((options) => options),
     })
-      .then((response) => response.json())
-      .then((result) => {
-        setQuestions(result.quiz.questions);
-      });
-  }, []);
-
-  // const quizQuery = useQuery({
-  //   queryKey: ["quiz", quizIndex, employee],
-  //   queryFn: () => {
-  //     GetQuizDataFn(quizIndex!,employee!);
-  //   },
-  //   refetchInterval: 300000,
-  // });
+  );
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -69,8 +51,11 @@ const QuizPage = () => {
   };
 
   const handleSubmit = () => {
-    if (answers.length === questions.length) {
-      router.replace("/employee-dashboard");
+    if (answers.length === quizQuery.data?.quiz?.questions?.length) {
+      router.push({
+        pathname: "/employee-dashboard",
+        query: { employee: employee },
+      });
       fetch("http://localhost:3333/add-score", {
         method: "POST",
         headers: {
@@ -79,7 +64,7 @@ const QuizPage = () => {
         body: JSON.stringify({
           quizIndex: quizIndex,
           answers: answers,
-          employee: JSON.parse(employee!),
+          employee: employee,
         }),
       });
     } else {
@@ -124,7 +109,7 @@ const QuizPage = () => {
           borderRadius: "10px",
         }}
       >
-        {questionValue.map((questionObj, index) => (
+        {questionValue?.map((questionObj, index) => (
           <>
             <Typography variant="h5" component="div" color="#2196f3">
               {index + 1}. {questionObj.question}

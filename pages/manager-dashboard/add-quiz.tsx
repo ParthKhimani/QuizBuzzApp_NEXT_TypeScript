@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -24,66 +24,25 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
-// import { Option, Question, Technology, Manager, Employee } from "@/types";
-
-interface Option {
-  id: number;
-  value: string;
-}
-
-interface Question {
-  id: number;
-  question: string;
-  options: { id: number; value: string }[];
-  answer: string;
-}
-
-interface Technology {
-  name: string;
-  managers: Manager[];
-  employees: Employee[];
-}
-
-interface Manager {
-  emailId: String;
-  password: String;
-  technology: Technology;
-}
-
-interface Employee {
-  emailId: string;
-  technology: Technology;
-}
+import { Option, Question, Technology } from "@/types";
 
 const AddQuiz: React.FC = () => {
   const router = useRouter();
-  const [openSuccess, setOpenSuccess] = React.useState(false);
-  const [openError, setOpenError] = React.useState(false);
-  const [quizOpenError, setQuizOpenError] = React.useState(false);
-  const [emailOpenSuccess, setEmailOpenSuccess] = React.useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [quizOpenError, setQuizOpenError] = useState(false);
+  const [emailOpenSuccess, setEmailOpenSuccess] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [technology, setTechnology] = useState("");
-  const [technologies, setTechnologies] = useState<Technology[]>([]);
   const [options, setOptions] = useState<Option[]>([
     { id: 1, value: "" },
     { id: 2, value: "" },
     { id: 3, value: "" },
     { id: 4, value: "" },
   ]);
-
-  useEffect(() => {
-    fetch("http://localhost:3333/get-technologies", {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.status === "200") {
-          setTechnologies(result.technologies);
-        }
-      });
-  }, []);
+  const managerTechnology = router.query.technology as string;
 
   const handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentQuestion(event.target.value);
@@ -172,7 +131,7 @@ const AddQuiz: React.FC = () => {
   };
 
   const handleSaveQuiz = () => {
-    if (questions.length === 0 || technology === "") {
+    if (questions.length === 0) {
       setQuizOpenError(true);
     } else {
       fetch("http://localhost:3333/add-quiz", {
@@ -180,7 +139,10 @@ const AddQuiz: React.FC = () => {
         headers: {
           "Content-Type": "application/json;charset=utf-8",
         },
-        body: JSON.stringify({ questions, technology }),
+        body: JSON.stringify({
+          questions: questions,
+          technology: managerTechnology,
+        }),
       })
         .then((response) => response.json())
         .then((result) => {
@@ -327,7 +289,10 @@ const AddQuiz: React.FC = () => {
           <Button
             variant="outlined"
             onClick={() => {
-              router.replace("/manager-dashboard");
+              router.push({
+                pathname: "/manager-dashboard",
+                query: { technology: managerTechnology },
+              });
             }}
           >
             Go to Dashboard
@@ -346,23 +311,9 @@ const AddQuiz: React.FC = () => {
           <Typography variant="h4" gutterBottom>
             Questions Added
           </Typography>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">
-              Choose Technology
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={technology}
-              label="Choose Employee"
-              name="employee"
-              onChange={handleTechnologyChange}
-            >
-              {technologies.map((technology) => (
-                <MenuItem value={technology.name}>{technology.name}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Typography variant="h6" gutterBottom>
+            Technology : {managerTechnology}
+          </Typography>
           <TableContainer>
             <Table
               sx={{ minWidth: 650 }}

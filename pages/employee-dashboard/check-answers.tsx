@@ -1,42 +1,27 @@
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { Question, Answer } from "@/types";
+import { useQuery } from "@tanstack/react-query";
+import { GetQuizDataWithAnswersFn } from "../api/apis";
 
 const AnswerPage = () => {
   const router = useRouter();
-  const [questions, setQuestions] = useState([]);
-  const [selectedAnswers, setSelectedAnswers] = useState<Answer[]>();
-  const [correctAnswers, setCorrectAnswers] = useState<string[]>();
-  const quizIndex = localStorage.getItem("quiz-index");
-  const employee = localStorage.getItem("employee");
-  const questionValue = questions.map((questionObject: Question) => ({
-    question: questionObject.question,
-    options: questionObject.options.map((options) => options),
-  }));
+  const quizIndex = String(router.query.quizIndex);
+  const employee = String(router.query.employee);
 
-  useEffect(() => {
-    fetch("http://localhost:3333/get-quiz-data-with-answers", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify({
-        index: quizIndex,
-        employee: JSON.parse(employee!),
-      }),
+  const quizQuery = useQuery({
+    queryKey: ["query", quizIndex, employee],
+    queryFn: () => GetQuizDataWithAnswersFn(quizIndex, employee),
+  });
+
+  const questionValue: Question[] = quizQuery.data?.quiz.questions?.map(
+    (questionObject: Question) => ({
+      question: questionObject.question,
+      options: questionObject.options.map((options) => options),
     })
-      .then((response) => response.json())
-      .then((result) => {
-        setQuestions(result.quiz.questions);
-        setSelectedAnswers(result.selectedAnswers);
-        setCorrectAnswers(result.answers);
-        console.log(selectedAnswers);
-        console.log(correctAnswers);
-      });
-  }, []);
-
+  );
   return (
     <>
       <Box
@@ -74,9 +59,9 @@ const AnswerPage = () => {
           borderRadius: "10px",
         }}
       >
-        {questionValue.map((questionObj, index) => {
-          const selectedAnswer = selectedAnswers![index].answer;
-          const correctAnswer = correctAnswers![index];
+        {questionValue?.map((questionObj, index) => {
+          const selectedAnswer = quizQuery.data?.selectedAnswers![index].answer;
+          const correctAnswer = quizQuery.data?.answers![index];
           const isCorrect = Number(selectedAnswer) === Number(correctAnswer);
           return (
             <>
@@ -133,7 +118,10 @@ const AnswerPage = () => {
         <Button
           variant="outlined"
           onClick={() => {
-            router.replace("/employee-dashboard");
+            router.push({
+              pathname: "/employee-dashboard",
+              query: { employee: employee },
+            });
           }}
         >
           Go to Dashboard

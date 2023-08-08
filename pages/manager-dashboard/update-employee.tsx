@@ -1,4 +1,3 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -14,13 +13,17 @@ import { AppBar, Toolbar } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import { UpdateEmployeeFn } from "../api/apis";
+import { useState, useEffect } from "react";
 
 const defaultTheme = createTheme();
 
 const UpdateEmployee = () => {
-  const [technology, setTechnology] = React.useState("");
+  const [technology, setTechnology] = useState<string>("");
   const router = useRouter();
-  const employeeData = JSON.parse(router.query.data as string);
+  const emailId = router.query.emailId;
+  const password = router.query.password;
+  const employeeTechnology = router.query.employeeTechnology as string;
+  const managerTechnology = router.query.technology;
 
   const handleChange = (event: SelectChangeEvent) => {
     setTechnology(event.target.value as string);
@@ -32,18 +35,24 @@ const UpdateEmployee = () => {
     const result = await UpdateEmployeeFn(formData);
     switch (result.status) {
       case "200":
-        router.replace("/manager-dashboard");
+        router.push({
+          pathname: "/manager-dashboard",
+          query: { technology: managerTechnology },
+        });
         break;
 
       case "202":
-        router.replace("/manager-dashboard");
+        router.push({
+          pathname: "/manager-dashboard",
+          query: { technology: managerTechnology },
+        });
         break;
     }
   };
 
-  React.useEffect(() => {
-    if (employeeData) {
-      setTechnology(employeeData.technology.name);
+  useEffect(() => {
+    if (employeeTechnology) {
+      setTechnology(employeeTechnology);
     }
   }, []);
 
@@ -93,7 +102,7 @@ const UpdateEmployee = () => {
                 label="Employee Email Id"
                 name="employee"
                 autoFocus
-                defaultValue={employeeData ? employeeData.emailId : ""}
+                defaultValue={emailId ? emailId : ""}
                 InputProps={{ readOnly: true }}
               />
               <TextField
@@ -104,7 +113,7 @@ const UpdateEmployee = () => {
                 label="Assign Password"
                 name="password"
                 autoFocus
-                defaultValue={employeeData ? employeeData.password : ""}
+                defaultValue={password ? password : ""}
               />
 
               <FormControl fullWidth>
@@ -140,7 +149,10 @@ const UpdateEmployee = () => {
                 variant="outlined"
                 sx={{ mt: 3, mb: 2 }}
                 onClick={() => {
-                  router.replace("/manager-dashboard");
+                  router.push({
+                    pathname: "/manager-dashboard",
+                    query: { technology: managerTechnology },
+                  });
                 }}
               >
                 Go to Dashboard

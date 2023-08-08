@@ -1,4 +1,3 @@
-import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,50 +10,46 @@ import CardContent from "@mui/material/CardContent";
 import { useRouter } from "next/router";
 import { GetQuizFn } from "../api/apis";
 import { useQuery } from "@tanstack/react-query";
-import { Quizes } from "@/types";
 import HighChart from "../components/high-chart";
 
 const EmployeeDashboard = () => {
   const router = useRouter();
-  const [quizCount, setQuizCount] = useState<number>(0);
-  const [technology, setTechnology] = useState<string>();
-  const [quizes, setQuizes] = useState<Quizes[]>([]);
+  const employee = String(router.query.employee);
 
   const quizDataQuery = useQuery({
-    queryKey: ["quiz"],
-    queryFn: GetQuizFn,
-    onSuccess: (data) => {
-      setQuizes(data.quiz.quizes);
-      setQuizCount(data.quiz.quizes!.length);
-      setTechnology(data.quiz.technology.name);
-    },
-    refetchInterval: 1000,
+    queryKey: ["quiz", employee],
+    queryFn: () => GetQuizFn(employee),
   });
 
   const handleStartQuiz = (event: React.MouseEvent<HTMLButtonElement>) => {
     const index = event.currentTarget.value;
-    localStorage.setItem("quiz-index", index);
-    router.replace("/employee-dashboard/quiz-page");
+    router.push({
+      pathname: "/employee-dashboard/quiz-page",
+      query: { quizIndex: index, employee: employee },
+    });
   };
 
   const handleCheckAnswers = (event: React.MouseEvent<HTMLButtonElement>) => {
     const index = event.currentTarget.value;
-    localStorage.setItem("quiz-index", index);
-    router.replace("/employee-dashboard/check-answers");
+    router.push({
+      pathname: "/employee-dashboard/check-answers",
+      query: { quizIndex: index, employee: employee },
+    });
   };
 
   const cardContent = (count: number, attempt: boolean) => (
     <>
       <CardContent>
         <Typography sx={{ fontSize: 14, textAlign: "center" }} gutterBottom>
-          {technology}
+          {quizDataQuery.data?.quiz?.technology.name}
         </Typography>
         <hr />
         <Typography sx={{ textAlign: "center" }} variant="h5" component="div">
           Quiz {count}
         </Typography>
         <Typography sx={{ textAlign: "center" }} variant="h6" component="div">
-          {quizes[count - 1].quiz.questions.length} Questions
+          {quizDataQuery.data?.quiz?.quizes[count - 1].quiz.questions.length}{" "}
+          Questions
         </Typography>
       </CardContent>
       <hr />
@@ -75,7 +70,8 @@ const EmployeeDashboard = () => {
       {attempt && (
         <>
           <Typography sx={{ fontSize: 16, textAlign: "center" }} gutterBottom>
-            Score : {quizes[count - 1].scoreGained}/{quizes[count - 1].score}
+            Score : {quizDataQuery.data?.quiz?.quizes[count - 1].scoreGained}/
+            {quizDataQuery.data?.quiz?.quizes[count - 1].score}
           </Typography>
           <hr />
           <Button
@@ -97,8 +93,8 @@ const EmployeeDashboard = () => {
   const renderCards = () => {
     const cards = [];
 
-    for (let i = 1; i <= quizCount; i++) {
-      const attempt = quizes[i - 1].attempted;
+    for (let i = 1; i <= quizDataQuery.data?.quiz?.quizes?.length; i++) {
+      const attempt = quizDataQuery.data?.quiz?.quizes[i - 1].attempted;
       const backgroundColor = attempt ? "green" : "default";
       const color = attempt ? "white" : "default";
       cards.push(
@@ -156,7 +152,8 @@ const EmployeeDashboard = () => {
         style={{ display: "flex", justifyContent: "center", margin: "10px" }}
       >
         <Typography variant="h6" component="div" color="#2196f3">
-          No. of quizzes assigned to you: {quizCount}
+          No. of quizzes assigned to you:{" "}
+          {quizDataQuery.data?.quiz?.quizes?.length}
         </Typography>
       </div>
       {quizDataQuery.isLoading && (
@@ -179,7 +176,9 @@ const EmployeeDashboard = () => {
         {renderCards()}
       </div>
       <hr />
-      <HighChart data={quizes} />
+      <div style={{ width: "40%", margin: "auto" }}>
+        <HighChart data={quizDataQuery.data?.quiz?.quizes} />
+      </div>
     </>
   );
 };

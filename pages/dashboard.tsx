@@ -1,4 +1,3 @@
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -9,9 +8,10 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Login from "./components/login";
+import { useState } from "react";
 
 const CommonDashboard = () => {
-  const [value, setValue] = React.useState("admin");
+  const [value, setValue] = useState("admin");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);

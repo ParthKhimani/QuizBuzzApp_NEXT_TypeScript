@@ -11,6 +11,7 @@ export interface Manager {
 }
 
 export interface Quiz {
+  questions: Question[];
   score: number;
   attempted: boolean;
   scoreGained: number;
@@ -55,4 +56,16 @@ export interface Answer {
   _id?: string;
   index: number;
   answer: string;
+}
+
+export interface QuizResponse {
+  quiz: Quiz;
+}
+
+export interface LoginProps {
+  role: string;
+}
+
+export interface EmployeeProps {
+  item: Employee;
 }

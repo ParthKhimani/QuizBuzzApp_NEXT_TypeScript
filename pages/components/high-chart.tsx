@@ -12,7 +12,7 @@ const HighChart: React.FC<HighChartProps> = ({ data }) => {
   let scoreGained = 0;
   let borderColor = "";
   let attemptCompleted = false;
-  for (let i = 0; i < data.length; i++) {
+  for (let i = 0; i < data?.length; i++) {
     if (data[i].attempted) {
       totalScore += data[i].score;
       scoreGained += data[i].scoreGained;
@@ -27,12 +27,14 @@ const HighChart: React.FC<HighChartProps> = ({ data }) => {
 
   const options = {
     title: {
-      text: "Your Overall Score",
+      text: "Overall Score",
     },
     series: [
       {
         type: "pie",
+        name: ["correct", "incorrect"],
         data: [percentage, remainingPercentage],
+        colors: ["green", "red"],
       },
     ],
   };
@@ -42,9 +44,6 @@ const HighChart: React.FC<HighChartProps> = ({ data }) => {
       <Box
         sx={{
           width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
         }}
       >
         {attemptCompleted && (
@@ -54,7 +53,6 @@ const HighChart: React.FC<HighChartProps> = ({ data }) => {
               boxShadow: 8,
               borderColor: borderColor,
               padding: 2,
-              width: "40%",
             }}
             style={{ margin: "15px", borderRadius: "10px" }}
           >
@@ -80,11 +78,11 @@ const HighChart: React.FC<HighChartProps> = ({ data }) => {
                 Failed with - {percentage} %
               </div>
             )}
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={options}
-              colors={["green", "red"]}
-            />
+            <HighchartsReact highcharts={Highcharts} options={options} />
+            <div style={{ color: "green" }}>Correct - {percentage}</div>
+            <div style={{ color: "red" }}>
+              Incorrect - {remainingPercentage}
+            </div>
           </Card>
         )}
         {!attemptCompleted && (

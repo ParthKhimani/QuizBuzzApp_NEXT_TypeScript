@@ -325,7 +325,7 @@ const AddQuiz: React.FC = () => {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={technology}
-              label="Choose Employee"
+              label="Choose Technology"
               name="employee"
               onChange={handleTechnologyChange}
             >

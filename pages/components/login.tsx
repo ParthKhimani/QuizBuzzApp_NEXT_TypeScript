@@ -11,12 +11,10 @@ import { Grid, Link } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { AdminLoginFn, ManagerLoginFn, EmployeeLoginFn } from "../api/apis";
+import { LoginProps } from "@/types";
 
 const defaultTheme = createTheme();
 
-interface LoginProps {
-  role: string;
-}
 const Login: React.FC<LoginProps> = ({ role }) => {
   const [error, setError] = useState<string>();
   const router = useRouter();
@@ -66,7 +64,10 @@ const Login: React.FC<LoginProps> = ({ role }) => {
       const ManagerLoginData = await ManagerLoginFn(formData);
       switch (ManagerLoginData.status) {
         case "303":
-          router.replace("/manager-dashboard");
+          router.push({
+            pathname: "/manager-dashboard",
+            query: { technology: ManagerLoginData.manager.technology.name },
+          });
           break;
 
         case "404":
@@ -82,7 +83,10 @@ const Login: React.FC<LoginProps> = ({ role }) => {
       const EmployeeLoginData = await EmployeeLoginFn(formData);
       switch (EmployeeLoginData.status) {
         case "303":
-          router.replace("/employee-dashboard");
+          router.push({
+            pathname: "/employee-dashboard",
+            query: { employee: EmployeeLoginData.employee.emailId },
+          });
           break;
 
         case "404":
@@ -94,10 +98,6 @@ const Login: React.FC<LoginProps> = ({ role }) => {
           break;
       }
     }
-  };
-
-  const handleSignUp = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    router.replace("/employee-dashboard/sign-up");
   };
 
   return (
@@ -166,7 +166,9 @@ const Login: React.FC<LoginProps> = ({ role }) => {
                     underline="hover"
                     variant="body2"
                     style={{ cursor: "pointer" }}
-                    onClick={handleSignUp}
+                    onClick={() =>
+                      router.replace("/employee-dashboard/sign-up")
+                    }
                   >
                     {" Sign Up"}
                   </Link>

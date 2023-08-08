@@ -4,61 +4,12 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import QuizIcon from "@mui/icons-material/Quiz";
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
 import { useRouter } from "next/router";
-import { Quiz, Employee } from "@/types";
-import { GetStaticProps, InferGetServerSidePropsType } from "next";
-import { deleteEmployeeFn, getEmployeeData } from "../api/apis";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import EmployeeTableManagerDashboard from "../components/employee-table-manager-dashboard";
 
-export const getStaticProps: GetStaticProps<{
-  employees: Employee[];
-}> = async () => {
-  const employeeData = await getEmployeeData();
-  return {
-    props: {
-      employees: employeeData.data,
-    },
-    revalidate: 5,
-  };
-};
-
-const ManagerDashboard = ({
-  employees,
-}: InferGetServerSidePropsType<typeof getStaticProps>) => {
+const ManagerDashboard = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
-
-  const employeeQuery = useQuery({
-    queryFn: getEmployeeData,
-    queryKey: ["employees"],
-    initialData: employees,
-  });
-
-  const deleteEmployeeMutation = useMutation(
-    (employeeJSONString: string) => deleteEmployeeFn(employeeJSONString),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["employees"]);
-      },
-    }
-  );
-
-  const handleUpdateEmployee = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const data = event.currentTarget.getAttribute("value");
-    router.push({
-      pathname: "/manager-dashboard/update-employee",
-      query: { data },
-    });
-  };
+  const managerTechnology = router.query.technology;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -85,7 +36,10 @@ const ManagerDashboard = ({
           variant="outlined"
           style={{ margin: "10px" }}
           onClick={() => {
-            router.replace("/manager-dashboard/add-employee");
+            router.push({
+              pathname: "/manager-dashboard/add-employee",
+              query: { technology: managerTechnology },
+            });
           }}
         >
           Add Employee
@@ -94,7 +48,10 @@ const ManagerDashboard = ({
           variant="outlined"
           style={{ margin: "10px" }}
           onClick={() => {
-            router.replace("/manager-dashboard/add-quiz");
+            router.push({
+              pathname: "/manager-dashboard/add-quiz",
+              query: { technology: managerTechnology },
+            });
           }}
         >
           Add Quiz
@@ -103,72 +60,12 @@ const ManagerDashboard = ({
       <Typography
         variant="h6"
         component="div"
-        color="#2196f3"
-        style={{ textAlign: "center" }}
+        color={"#2196f3"}
+        textAlign={"center"}
       >
-        Employee Table
+        EMPLOYEE TABLE
       </Typography>
-      <br />
-      <TableContainer
-        component={Paper}
-        style={{
-          width: "75%",
-          margin: "auto",
-        }}
-      >
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Employee's mail Id</TableCell>
-              <TableCell>Technology</TableCell>
-              <TableCell>Scored in Quizes</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {employeeQuery.data.data?.map(
-              (item: Employee, index: React.Key | null | undefined) => (
-                <TableRow key={index}>
-                  <TableCell rowSpan={employeeQuery.data.data?.length}>
-                    {item.emailId}
-                  </TableCell>
-                  <TableCell rowSpan={employeeQuery.data.data?.length}>
-                    {item.technology.name}
-                  </TableCell>
-                  {item.quizes.map((quiz: Quiz, index: number) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        Quiz {index + 1}: {quiz.scoreGained}/{quiz.score}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      color="success"
-                      style={{ marginRight: "10px" }}
-                      onClick={handleUpdateEmployee}
-                      value={JSON.stringify(item)}
-                    >
-                      Update
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      style={{ margin: "10px" }}
-                      onClick={() => {
-                        deleteEmployeeMutation.mutate(JSON.stringify(item));
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              )
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <EmployeeTableManagerDashboard />
     </Box>
   );
 };
