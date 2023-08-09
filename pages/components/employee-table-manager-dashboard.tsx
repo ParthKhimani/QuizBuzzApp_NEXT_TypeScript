@@ -11,7 +11,8 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteEmployeeFn, getEmployeeData } from "../api/apis";
 import { useRouter } from "next/router";
-import { Employee, Quiz } from "@/types";
+import { Employee } from "@/types";
+import QuizDataForEmployeeTable from "./quiz-data-for-employee-table";
 
 const EmployeeTableManagerDashboard = () => {
   const router = useRouter();
@@ -91,33 +92,16 @@ const EmployeeTableManagerDashboard = () => {
                         >
                           {item.technology.name}
                         </TableCell>
-                        {item.quizes.length == 0 && (
+                        {item.quizes.length === 0 && (
                           <TableCell>
                             Assign a Quiz to check the score !
                           </TableCell>
                         )}
-                        {item.quizes.map((quiz: Quiz, index: number) => (
-                          <>
-                            {quiz.attempted && (
-                              <TableRow key={index}>
-                                <TableCell>
-                                  Quiz {index + 1}: {quiz.scoreGained}/
-                                  {quiz.score}
-                                </TableCell>
-                              </TableRow>
-                            )}
-                            {!quiz.attempted && (
-                              <TableRow key={index}>
-                                <TableCell>
-                                  Quiz {index + 1}:{" "}
-                                  <b style={{ color: "red" }}>
-                                    *Yet not attempted the Quiz
-                                  </b>
-                                </TableCell>
-                              </TableRow>
-                            )}
-                          </>
-                        ))}
+                        {item.quizes.length !== 0 && (
+                          <TableCell>
+                            <QuizDataForEmployeeTable item={item} />
+                          </TableCell>
+                        )}
                         <TableCell
                           rowSpan={employeeQuery.data.data?.quizes?.length}
                         >

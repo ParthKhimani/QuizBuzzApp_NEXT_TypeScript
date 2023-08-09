@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -49,6 +50,7 @@ const Login: React.FC<LoginProps> = ({ role }) => {
       switch (AdminLoginData.status) {
         case "303":
           router.replace("/admin-dashboard");
+          localStorage.setItem("token", AdminLoginData.token);
           break;
 
         case "404":

@@ -55,25 +55,27 @@ const QuizDataForEmployeeTable: React.FC<EmployeeProps> = ({ item }) => {
             <Table>
               <TableContainer>
                 <TableHead>
-                  <TableCell>Quizes</TableCell>
+                  <TableCell style={{ fontWeight: "bolder" }}>Quizes</TableCell>
+                  <TableCell style={{ fontWeight: "bolder" }}>Score</TableCell>
                 </TableHead>
                 <TableBody>
                   {item.quizes.map((quiz: Quiz, index: number) => (
                     <>
                       {quiz.attempted && (
                         <TableRow key={index}>
+                          <TableCell>Quiz {index + 1}</TableCell>
                           <TableCell>
-                            Quiz {index + 1}: {quiz.scoreGained}/{quiz.score}
+                            {quiz.scoreGained}/{quiz.score}
                           </TableCell>
                         </TableRow>
                       )}
                       {!quiz.attempted && (
                         <TableRow key={index}>
-                          <TableCell>
-                            Quiz {index + 1}:{" "}
-                            <b style={{ color: "red" }}>
-                              *Yet not attempted the Quiz
-                            </b>
+                          <TableCell>Quiz {index + 1}</TableCell>
+                          <TableCell
+                            style={{ color: "red", fontWeight: "bold" }}
+                          >
+                            *Yet not attempted the Quiz
                           </TableCell>
                         </TableRow>
                       )}

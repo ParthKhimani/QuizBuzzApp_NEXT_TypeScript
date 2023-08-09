@@ -79,9 +79,9 @@ const HighChart: React.FC<HighChartProps> = ({ data }) => {
               </div>
             )}
             <HighchartsReact highcharts={Highcharts} options={options} />
-            <div style={{ color: "green" }}>Correct - {percentage}</div>
+            <div style={{ color: "green" }}>Correct - {scoreGained}</div>
             <div style={{ color: "red" }}>
-              Incorrect - {remainingPercentage}
+              Incorrect - {totalScore - scoreGained}
             </div>
           </Card>
         )}
