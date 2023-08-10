@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { Question, Answer } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { GetQuizDataFn } from "../api/apis";
+import Cookies from "js-cookie";
 
 const QuizPage = () => {
   const router = useRouter();
@@ -92,7 +93,8 @@ const QuizPage = () => {
             <Button
               color="inherit"
               onClick={() => {
-                router.replace("/dashboard");
+                router.replace("/");
+                Cookies.remove("token");
               }}
             >
               sign out

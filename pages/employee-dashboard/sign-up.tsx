@@ -77,7 +77,7 @@ const SignUp = () => {
             break;
 
           case "202":
-            router.replace("/dashboard");
+            router.replace("/");
             break;
         }
       });

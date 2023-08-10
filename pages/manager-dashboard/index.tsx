@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import EmployeeTableManagerDashboard from "../components/employee-table-manager-dashboard";
+import Cookies from "js-cookie";
 
 const ManagerDashboard = () => {
   const router = useRouter();
@@ -22,7 +23,8 @@ const ManagerDashboard = () => {
           <Button
             color="inherit"
             onClick={() => {
-              router.replace("/dashboard");
+              router.replace("/");
+              Cookies.remove("token");
             }}
           >
             sign out

@@ -86,7 +86,12 @@ const HighChart: React.FC<HighChartProps> = ({ data }) => {
           </Card>
         )}
         {!attemptCompleted && (
-          <div style={{ fontWeight: "bolder" }}>
+          <div
+            style={{
+              fontWeight: "bolder",
+              textAlign: "center",
+            }}
+          >
             *Please Attempt any quiz to check your grade!
           </div>
         )}

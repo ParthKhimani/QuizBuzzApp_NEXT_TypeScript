@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { GetQuizFn } from "../api/apis";
 import { useQuery } from "@tanstack/react-query";
 import HighChart from "../components/high-chart";
+import Cookies from "js-cookie";
 
 const EmployeeDashboard = () => {
   const router = useRouter();
@@ -140,7 +141,8 @@ const EmployeeDashboard = () => {
             <Button
               color="inherit"
               onClick={() => {
-                router.replace("/dashboard");
+                router.replace("/");
+                Cookies.remove("token");
               }}
             >
               sign out

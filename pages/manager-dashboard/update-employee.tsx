@@ -14,6 +14,7 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import { UpdateEmployeeFn } from "../api/apis";
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
 const defaultTheme = createTheme();
 
@@ -67,7 +68,8 @@ const UpdateEmployee = () => {
           <Button
             color="inherit"
             onClick={() => {
-              router.replace("/dashboard");
+              router.replace("/");
+              Cookies.remove("token");
             }}
           >
             sign out

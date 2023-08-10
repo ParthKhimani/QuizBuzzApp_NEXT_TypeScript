@@ -25,6 +25,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import { Option, Question, Technology } from "@/types";
+import Cookies from "js-cookie";
 
 const AddQuiz: React.FC = () => {
   const router = useRouter();
@@ -189,7 +190,8 @@ const AddQuiz: React.FC = () => {
           <Button
             color="inherit"
             onClick={() => {
-              router.replace("/dashboard");
+              router.replace("/");
+              Cookies.remove("token");
             }}
           >
             sign out

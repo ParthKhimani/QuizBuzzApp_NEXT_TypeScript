@@ -7,10 +7,10 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Tab } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ManagerTable from "../components/manager-table";
 import EmployeeTable from "../components/employee-table";
-// import jwt_decode from "jwt-decode";
+import Cookies from "js-cookie";
 
 const AdminDashboard = () => {
   const router = useRouter();
@@ -19,13 +19,6 @@ const AdminDashboard = () => {
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
-  // useEffect(() => {
-  //   const token = jwt_decode(localStorage.getItem("token")!);
-
-  //   if (token && token.role !== "admin") {
-  //     router.push("/");
-  //   }
-  // }, [1000]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -35,7 +28,13 @@ const AdminDashboard = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Welcome Admin
           </Typography>
-          <Button color="inherit" onClick={() => router.replace("/dashboard")}>
+          <Button
+            color="inherit"
+            onClick={() => {
+              router.replace("/");
+              Cookies.remove("token");
+            }}
+          >
             sign out
           </Button>
         </Toolbar>

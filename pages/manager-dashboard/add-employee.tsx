@@ -14,6 +14,7 @@ import { AppBar, Toolbar } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import { AddEmployeeFn } from "../api/apis";
+import Cookies from "js-cookie";
 
 const defaultTheme = createTheme();
 
@@ -55,7 +56,8 @@ const AddEmployee = () => {
           <Button
             color="inherit"
             onClick={() => {
-              router.replace("/dashboard");
+              router.replace("/");
+              Cookies.remove("token");
             }}
           >
             sign out

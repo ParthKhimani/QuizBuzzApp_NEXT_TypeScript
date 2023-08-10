@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { AppBar, Toolbar } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { updateManagerFn } from "../api/apis";
+import Cookies from "js-cookie";
 
 const defaultTheme = createTheme();
 
@@ -58,7 +59,8 @@ const UpdateManager = () => {
           <Button
             color="inherit"
             onClick={() => {
-              router.replace("/dashboard");
+              router.replace("/");
+              Cookies.remove("token");
             }}
           >
             sign out

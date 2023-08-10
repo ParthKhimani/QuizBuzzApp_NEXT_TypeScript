@@ -13,6 +13,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { AdminLoginFn, ManagerLoginFn, EmployeeLoginFn } from "../api/apis";
 import { LoginProps } from "@/types";
+import Cookies from "js-cookie";
 
 const defaultTheme = createTheme();
 
@@ -50,7 +51,8 @@ const Login: React.FC<LoginProps> = ({ role }) => {
       switch (AdminLoginData.status) {
         case "303":
           router.replace("/admin-dashboard");
-          localStorage.setItem("token", AdminLoginData.token);
+          // localStorage.setItem("token", AdminLoginData.token);
+          Cookies.set("token", AdminLoginData.token);
           break;
 
         case "404":
@@ -70,6 +72,7 @@ const Login: React.FC<LoginProps> = ({ role }) => {
             pathname: "/manager-dashboard",
             query: { technology: ManagerLoginData.manager.technology.name },
           });
+          Cookies.set("token", ManagerLoginData.token);
           break;
 
         case "404":
@@ -89,6 +92,7 @@ const Login: React.FC<LoginProps> = ({ role }) => {
             pathname: "/employee-dashboard",
             query: { employee: EmployeeLoginData.employee.emailId },
           });
+          Cookies.set("token", EmployeeLoginData.token);
           break;
 
         case "404":
