@@ -68,10 +68,7 @@ const Login: React.FC<LoginProps> = ({ role }) => {
       const ManagerLoginData = await ManagerLoginFn(formData);
       switch (ManagerLoginData.status) {
         case "303":
-          router.push({
-            pathname: "/manager-dashboard",
-            query: { technology: ManagerLoginData.manager.technology.name },
-          });
+          router.replace("/manager-dashboard");
           Cookies.set("token", ManagerLoginData.token);
           break;
 
@@ -88,10 +85,7 @@ const Login: React.FC<LoginProps> = ({ role }) => {
       const EmployeeLoginData = await EmployeeLoginFn(formData);
       switch (EmployeeLoginData.status) {
         case "303":
-          router.push({
-            pathname: "/employee-dashboard",
-            query: { employee: EmployeeLoginData.employee.emailId },
-          });
+          router.replace("/employee-dashboard");
           Cookies.set("token", EmployeeLoginData.token);
           break;
 
@@ -172,9 +166,7 @@ const Login: React.FC<LoginProps> = ({ role }) => {
                     underline="hover"
                     variant="body2"
                     style={{ cursor: "pointer" }}
-                    onClick={() =>
-                      router.replace("/employee-dashboard/sign-up")
-                    }
+                    onClick={() => router.replace("/sign-up")}
                   >
                     {" Sign Up"}
                   </Link>

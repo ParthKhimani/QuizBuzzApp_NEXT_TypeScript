@@ -15,13 +15,23 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import { AddEmployeeFn } from "../api/apis";
 import Cookies from "js-cookie";
+import { useState } from "react";
+import { JwtPayload } from "jsonwebtoken";
+import jwt_decode from "jwt-decode";
 
 const defaultTheme = createTheme();
 
 const AddEmployee = () => {
-  const [technology, setTechnology] = React.useState("");
-  const [error, setError] = React.useState<string>();
+  const [technology, setTechnology] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
+  const token = Cookies.get("token");
+  let managerTechnology = "";
+
+  if (token) {
+    const decode: JwtPayload = jwt_decode(token);
+    managerTechnology = decode.technology;
+  }
 
   const handleChange = (event: SelectChangeEvent) => {
     setTechnology(event.target.value as string);
@@ -114,12 +124,9 @@ const AddEmployee = () => {
                   label="Technology"
                   onChange={handleChange}
                 >
-                  <MenuItem value={"MERN Stack"}>MERN Stack</MenuItem>
-                  <MenuItem value={"MEAN Stack"}>MEAN Stack</MenuItem>
-                  <MenuItem value={"PHP-laravel"}>PHP-laravel</MenuItem>
-                  <MenuItem value={"Python"}>Python</MenuItem>
-                  <MenuItem value={"Flutter-Android"}>Flutter-Android</MenuItem>
-                  <MenuItem value={"iOS"}>iOS</MenuItem>
+                  <MenuItem value={managerTechnology}>
+                    {managerTechnology}
+                  </MenuItem>
                 </Select>
               </FormControl>
               <div style={{ color: "red" }}>{error}</div>

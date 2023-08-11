@@ -1,16 +1,23 @@
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
-import { useState } from "react";
 import { useRouter } from "next/router";
-import { Question, Answer } from "@/types";
+import { Question } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { GetQuizDataWithAnswersFn } from "../api/apis";
 import Cookies from "js-cookie";
+import { JwtPayload } from "jsonwebtoken";
+import jwt_decode from "jwt-decode";
 
 const AnswerPage = () => {
   const router = useRouter();
   const quizIndex = String(router.query.quizIndex);
-  const employee = String(router.query.employee);
+  const token = Cookies.get("token");
+  let employee = "";
+
+  if (token) {
+    const decode: JwtPayload = jwt_decode(token);
+    employee = decode.employee;
+  }
 
   const quizQuery = useQuery({
     queryKey: ["query", quizIndex, employee],

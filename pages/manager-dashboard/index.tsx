@@ -7,10 +7,18 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import EmployeeTableManagerDashboard from "../components/employee-table-manager-dashboard";
 import Cookies from "js-cookie";
+import { JwtPayload } from "jsonwebtoken";
+import jwt_decode from "jwt-decode";
 
 const ManagerDashboard = () => {
   const router = useRouter();
-  const managerTechnology = router.query.technology;
+  const token = Cookies.get("token");
+  let managerTechnology = "";
+
+  if (token) {
+    const decode: JwtPayload = jwt_decode(token);
+    managerTechnology = decode.technology;
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -38,10 +46,7 @@ const ManagerDashboard = () => {
           variant="outlined"
           style={{ margin: "10px" }}
           onClick={() => {
-            router.push({
-              pathname: "/manager-dashboard/add-employee",
-              query: { technology: managerTechnology },
-            });
+            router.replace("/manager-dashboard/add-employee");
           }}
         >
           Add Employee
@@ -50,10 +55,7 @@ const ManagerDashboard = () => {
           variant="outlined"
           style={{ margin: "10px" }}
           onClick={() => {
-            router.push({
-              pathname: "/manager-dashboard/add-quiz",
-              query: { technology: managerTechnology },
-            });
+            router.replace("/manager-dashboard/add-quiz");
           }}
         >
           Add Quiz

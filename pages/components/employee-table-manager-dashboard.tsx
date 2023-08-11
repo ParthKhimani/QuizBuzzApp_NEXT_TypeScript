@@ -13,12 +13,20 @@ import { deleteEmployeeFn, getEmployeeData } from "../api/apis";
 import { useRouter } from "next/router";
 import { Employee } from "@/types";
 import QuizDataForEmployeeTable from "./quiz-data-for-employee-table";
+import Cookies from "js-cookie";
+import { JwtPayload } from "jsonwebtoken";
+import jwt_decode from "jwt-decode";
 
 const EmployeeTableManagerDashboard = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const managerTechnology = router.query.technology;
 
+  const token = Cookies.get("token");
+  let managerTechnology = "";
+  if (token) {
+    const decode: JwtPayload = jwt_decode(token);
+    managerTechnology = decode.technology;
+  }
   const employeeQuery = useQuery({
     queryFn: getEmployeeData,
     queryKey: ["employees"],
@@ -37,15 +45,12 @@ const EmployeeTableManagerDashboard = () => {
     const data = event.currentTarget.getAttribute("value");
     const emailId = JSON.parse(data!).emailId;
     const password = JSON.parse(data!).password;
-    const employeeTechnology = JSON.parse(data!).technology.name;
 
     router.push({
       pathname: "/manager-dashboard/update-employee",
       query: {
         emailId: emailId,
         password: password,
-        employeeTechnology: employeeTechnology,
-        technology: managerTechnology,
       },
     });
   };

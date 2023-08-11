@@ -1,4 +1,5 @@
 export interface Technology {
+  _id: string;
   name: string;
   managers: Manager[];
   employees: Employee[];

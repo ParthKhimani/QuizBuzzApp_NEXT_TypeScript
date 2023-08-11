@@ -12,10 +12,18 @@ import { GetQuizFn } from "../api/apis";
 import { useQuery } from "@tanstack/react-query";
 import HighChart from "../components/high-chart";
 import Cookies from "js-cookie";
+import { JwtPayload } from "jsonwebtoken";
+import jwt_decode from "jwt-decode";
 
 const EmployeeDashboard = () => {
   const router = useRouter();
-  const employee = String(router.query.employee);
+  const token = Cookies.get("token");
+  let employee = "";
+
+  if (token) {
+    const decode: JwtPayload = jwt_decode(token);
+    employee = decode.employee;
+  }
 
   const quizDataQuery = useQuery({
     queryKey: ["quiz", employee],
@@ -34,7 +42,7 @@ const EmployeeDashboard = () => {
     const index = event.currentTarget.value;
     router.push({
       pathname: "/employee-dashboard/check-answers",
-      query: { quizIndex: index, employee: employee },
+      query: { quizIndex: index },
     });
   };
 

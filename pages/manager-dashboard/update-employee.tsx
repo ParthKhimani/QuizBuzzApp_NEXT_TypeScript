@@ -13,18 +13,25 @@ import { AppBar, Toolbar } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import { UpdateEmployeeFn } from "../api/apis";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Cookies from "js-cookie";
+import { JwtPayload } from "jsonwebtoken";
+import jwt_decode from "jwt-decode";
 
 const defaultTheme = createTheme();
 
 const UpdateEmployee = () => {
-  const [technology, setTechnology] = useState<string>("");
+  const [technology, setTechnology] = useState("");
   const router = useRouter();
   const emailId = router.query.emailId;
   const password = router.query.password;
-  const employeeTechnology = router.query.employeeTechnology as string;
-  const managerTechnology = router.query.technology;
+  const token = Cookies.get("token");
+  let managerTechnology = "";
+
+  if (token) {
+    const decode: JwtPayload = jwt_decode(token);
+    managerTechnology = decode.technology;
+  }
 
   const handleChange = (event: SelectChangeEvent) => {
     setTechnology(event.target.value as string);
@@ -36,26 +43,14 @@ const UpdateEmployee = () => {
     const result = await UpdateEmployeeFn(formData);
     switch (result.status) {
       case "200":
-        router.push({
-          pathname: "/manager-dashboard",
-          query: { technology: managerTechnology },
-        });
+        router.replace("/manager-dashboard");
         break;
 
       case "202":
-        router.push({
-          pathname: "/manager-dashboard",
-          query: { technology: managerTechnology },
-        });
+        router.replace("/manager-dashboard");
         break;
     }
   };
-
-  useEffect(() => {
-    if (employeeTechnology) {
-      setTechnology(employeeTechnology);
-    }
-  }, []);
 
   return (
     <>
@@ -129,13 +124,11 @@ const UpdateEmployee = () => {
                   name="technology"
                   label="Technology"
                   onChange={handleChange}
+                  defaultValue={managerTechnology ? managerTechnology : ""}
                 >
-                  <MenuItem value={"MERN Stack"}>MERN Stack</MenuItem>
-                  <MenuItem value={"MEAN Stack"}>MEAN Stack</MenuItem>
-                  <MenuItem value={"PHP-laravel"}>PHP-laravel</MenuItem>
-                  <MenuItem value={"Python"}>Python</MenuItem>
-                  <MenuItem value={"Flutter-Android"}>Flutter-Android</MenuItem>
-                  <MenuItem value={"iOS"}>iOS</MenuItem>
+                  <MenuItem value={managerTechnology}>
+                    {managerTechnology}
+                  </MenuItem>
                 </Select>
               </FormControl>
               <Button
@@ -151,10 +144,7 @@ const UpdateEmployee = () => {
                 variant="outlined"
                 sx={{ mt: 3, mb: 2 }}
                 onClick={() => {
-                  router.push({
-                    pathname: "/manager-dashboard",
-                    query: { technology: managerTechnology },
-                  });
+                  router.replace("/manager-dashboard");
                 }}
               >
                 Go to Dashboard

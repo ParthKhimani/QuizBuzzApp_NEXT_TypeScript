@@ -24,8 +24,10 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
-import { Option, Question, Technology } from "@/types";
+import { Option, Question } from "@/types";
 import Cookies from "js-cookie";
+import { JwtPayload } from "jsonwebtoken";
+import jwt_decode from "jwt-decode";
 
 const AddQuiz: React.FC = () => {
   const router = useRouter();
@@ -36,14 +38,19 @@ const AddQuiz: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [currentAnswer, setCurrentAnswer] = useState("");
-  const [technology, setTechnology] = useState("");
   const [options, setOptions] = useState<Option[]>([
     { id: 1, value: "" },
     { id: 2, value: "" },
     { id: 3, value: "" },
     { id: 4, value: "" },
   ]);
-  const managerTechnology = router.query.technology as string;
+  const token = Cookies.get("token");
+  let managerTechnology = "";
+
+  if (token) {
+    const decode: JwtPayload = jwt_decode(token);
+    managerTechnology = decode.technology;
+  }
 
   const handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentQuestion(event.target.value);
@@ -171,12 +178,6 @@ const AddQuiz: React.FC = () => {
 
   const handleClearQuiz = () => {
     setQuestions([]);
-    setTechnology("");
-  };
-
-  const handleTechnologyChange = (event: SelectChangeEvent) => {
-    const technology = event.target.value;
-    setTechnology(technology as string);
   };
 
   return (
@@ -291,10 +292,7 @@ const AddQuiz: React.FC = () => {
           <Button
             variant="outlined"
             onClick={() => {
-              router.push({
-                pathname: "/manager-dashboard",
-                query: { technology: managerTechnology },
-              });
+              router.replace("/manager-dashboard");
             }}
           >
             Go to Dashboard

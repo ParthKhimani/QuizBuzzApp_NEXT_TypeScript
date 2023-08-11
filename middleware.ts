@@ -7,7 +7,6 @@ import {
 } from "./src/router/routes";
 import { JwtPayload } from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
-import { notFound } from "next/navigation";
 
 export const config = {
   matcher: [
@@ -65,7 +64,13 @@ const middleware = (req: NextRequest) => {
     ) {
       return NextResponse.redirect(new URL("/", req.url));
     } else if (authRoutes.includes(req.nextUrl.pathname)) {
-      return NextResponse.redirect(new URL("/404", req.url));
+      if (decode.role === "admin")
+        return NextResponse.redirect(new URL("/admin-dashboard", req.url));
+      if (decode.role === "manager")
+        return NextResponse.redirect(new URL("/manager-dashboard", req.url));
+      if (decode.role === "employee")
+        return NextResponse.redirect(new URL("/employee-dashboard", req.url));
+      // return NextResponse.redirect(new URL("/404", req.url));
     }
   }
 };
