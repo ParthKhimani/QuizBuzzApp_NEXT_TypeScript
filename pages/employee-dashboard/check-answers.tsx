@@ -24,7 +24,7 @@ const AnswerPage = () => {
     queryFn: () => GetQuizDataWithAnswersFn(quizIndex, employee),
   });
 
-  const questionValue: Question[] = quizQuery.data?.quiz.questions?.map(
+  const questionValue: Question[] = quizQuery.data?.quiz?.questions?.map(
     (questionObject: Question) => ({
       question: questionObject.question,
       options: questionObject.options.map((options) => options),
@@ -102,7 +102,7 @@ const AnswerPage = () => {
                   color: isCorrect
                     ? Number(correctAnswer) === optionIndex + 1
                       ? "white"
-                      : "black"
+                      : ""
                     : Number(correctAnswer) === optionIndex + 1
                     ? "white"
                     : Number(selectedAnswer) === optionIndex + 1
@@ -127,10 +127,7 @@ const AnswerPage = () => {
         <Button
           variant="outlined"
           onClick={() => {
-            router.push({
-              pathname: "/employee-dashboard",
-              query: { employee: employee },
-            });
+            router.replace("/employee-dashboard");
           }}
         >
           Go to Dashboard

@@ -17,6 +17,7 @@ export const config = {
     "/admin-dashboard/add-quiz",
     "/admin-dashboard/update-employee",
     "/admin-dashboard/update-manager",
+    "/admin-dashboard/assign-quiz",
     "/manager-dashboard",
     "/manager-dashboard/add-employee",
     "/manager-dashboard/add-quiz",
@@ -70,7 +71,6 @@ const middleware = (req: NextRequest) => {
         return NextResponse.redirect(new URL("/manager-dashboard", req.url));
       if (decode.role === "employee")
         return NextResponse.redirect(new URL("/employee-dashboard", req.url));
-      // return NextResponse.redirect(new URL("/404", req.url));
     }
   }
 };

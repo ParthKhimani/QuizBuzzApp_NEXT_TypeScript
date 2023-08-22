@@ -13,6 +13,9 @@ import { deleteEmployeeFn, getEmployeeData } from "../api/apis";
 import { useRouter } from "next/router";
 import { Employee, Quiz } from "@/types";
 import QuizDataForEmployeeTable from "./quiz-data-for-employee-table";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 
 const EmployeeTable = () => {
   const router = useRouter();
@@ -28,7 +31,7 @@ const EmployeeTable = () => {
       deleteEmployeeFn(JSON.parse(employeeJSONString)),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["employees"]);
+        queryClient.invalidateQueries();
       },
     }
   );
@@ -38,6 +41,16 @@ const EmployeeTable = () => {
     router.push({
       pathname: "/admin-dashboard/update-employee",
       query: { data },
+    });
+  };
+
+  const handleAssignQuiz = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const employeeObj = event.currentTarget.getAttribute("value");
+    const technology = JSON.parse(employeeObj!).technology;
+    const employee = JSON.parse(employeeObj!).emailId;
+    router.push({
+      pathname: "/admin-dashboard/assign-quiz",
+      query: { technology: technology?._id, employee: employee },
     });
   };
 
@@ -57,6 +70,7 @@ const EmployeeTable = () => {
               <TableCell>Employee's mail Id</TableCell>
               <TableCell>Technology</TableCell>
               <TableCell>Scored in Quizes</TableCell>
+              <TableCell>Assign Quiz</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
@@ -78,25 +92,27 @@ const EmployeeTable = () => {
                       <QuizDataForEmployeeTable item={item} />
                     </TableCell>
                   )}
+                  <TableCell>
+                    <Button
+                      value={JSON.stringify(item)}
+                      onClick={handleAssignQuiz}
+                    >
+                      <AssignmentIcon />
+                    </Button>
+                  </TableCell>
                   <TableCell rowSpan={employeeQuery.data.data?.quizes?.length}>
                     <Button
-                      variant="outlined"
-                      color="success"
-                      style={{ marginRight: "10px" }}
                       onClick={handleUpdateEmployee}
                       value={JSON.stringify(item)}
                     >
-                      Update
+                      <EditIcon />
                     </Button>
                     <Button
-                      variant="outlined"
-                      color="error"
-                      style={{ margin: "10px" }}
                       onClick={() => {
                         deleteEmployeeMutation.mutate(JSON.stringify(item));
                       }}
                     >
-                      Delete
+                      <DeleteIcon />
                     </Button>
                   </TableCell>
                 </TableRow>

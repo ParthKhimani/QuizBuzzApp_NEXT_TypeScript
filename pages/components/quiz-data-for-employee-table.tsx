@@ -17,7 +17,7 @@ import HighChart from "./high-chart";
 
 const QuizDataForEmployeeTable: React.FC<EmployeeProps> = ({ item }) => {
   const [open, setOpen] = useState(false);
-  const employee = item.emailId;
+  const employee = item?.emailId;
 
   const quizDataQuery = useQuery({
     queryKey: ["quiz", employee],
@@ -41,9 +41,7 @@ const QuizDataForEmployeeTable: React.FC<EmployeeProps> = ({ item }) => {
 
   return (
     <>
-      <Button style={{ margin: "auto" }} onClick={handleOpen}>
-        Check Score
-      </Button>
+      <Button onClick={handleOpen}>Check Score</Button>
       <Modal
         open={open}
         onClose={handleClose}

@@ -12,6 +12,7 @@ export interface Manager {
 }
 
 export interface Quiz {
+  _id: string;
   questions: Question[];
   score: number;
   attempted: boolean;
@@ -19,6 +20,7 @@ export interface Quiz {
 }
 
 export interface Employee {
+  _id: string;
   emailId: string;
   technology: Technology;
   quizes: Quiz[];
@@ -63,10 +65,17 @@ export interface QuizResponse {
   quiz: Quiz;
 }
 
-export interface LoginProps {
-  role: string;
-}
-
 export interface EmployeeProps {
   item: Employee;
+}
+export interface MyLoginValue {
+  emailId: string;
+  password: string;
+}
+export interface MySignUpValue {
+  firstName: string;
+  lastName: string;
+  emailId: string;
+  password: string;
+  technology: string;
 }

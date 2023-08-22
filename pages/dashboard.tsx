@@ -1,88 +1,215 @@
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import QuizIcon from "@mui/icons-material/Quiz";
-import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import Login from "./components/login";
 import { useState } from "react";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useRouter } from "next/router";
+import { FormControl, Grid, Link, Radio } from "@mui/material";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { AdminLoginFn, ManagerLoginFn, EmployeeLoginFn } from "./api/apis";
+import Cookies from "js-cookie";
+import { SelectChangeEvent } from "@mui/material/Select";
+import QuizIcon from "@mui/icons-material/Quiz";
+
+const defaultTheme = createTheme();
 
 const CommonDashboard = () => {
-  const [value, setValue] = useState("admin");
+  const [error, setError] = useState<string>();
+  const [role, setRole] = useState<string>();
+  const router = useRouter();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
+  const handleChange = (event: SelectChangeEvent) => {
+    setRole(event.target.value as string);
   };
 
+  const validationSchema = yup.object({
+    emailId: yup
+      .string()
+      .email("Enter a valid email Id")
+      .required("Email is required"),
+    password: yup
+      .string()
+      .min(8, "Password should be of minimum 8 characters length")
+      .required("Password is required"),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      emailId: "",
+      password: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      if (role === "admin") {
+        const AdminLoginData = await AdminLoginFn(values);
+        switch (AdminLoginData.status) {
+          case "303":
+            router.replace("/admin-dashboard");
+            Cookies.set("token", AdminLoginData.token);
+            break;
+
+          case "404":
+            setError("*Email id Not Registered as an admin!");
+            break;
+
+          case "400":
+            setError("*Incorrect Password!");
+            break;
+        }
+      }
+      if (role === "manager") {
+        const ManagerLoginData = await ManagerLoginFn(values);
+        switch (ManagerLoginData.status) {
+          case "303":
+            router.replace("/manager-dashboard");
+            Cookies.set("token", ManagerLoginData.token);
+            break;
+
+          case "404":
+            setError("*Email id Not Registered as an manager!");
+            break;
+
+          case "400":
+            setError("*Incorrect Password!");
+            break;
+        }
+      }
+      if (role === "employee") {
+        const EmployeeLoginData = await EmployeeLoginFn(values);
+        switch (EmployeeLoginData.status) {
+          case "303":
+            router.replace("/employee-dashboard");
+            Cookies.set("token", EmployeeLoginData.token);
+            break;
+
+          case "404":
+            setError("*Email id Not Registered as an employee!");
+            break;
+
+          case "400":
+            setError("*Incorrect Password!");
+            break;
+        }
+      }
+    },
+  });
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <QuizIcon style={{ margin: "0px 10px" }} />
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            boxShadow: 8,
+            padding: 5,
+            borderRadius: "8px",
+          }}
+        >
+          <QuizIcon style={{ margin: " 10px" }} color="primary" />
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, color: "#2196f3" }}
+          >
             QuizBuzz
           </Typography>
-        </Toolbar>
-      </AppBar>
-      <div
-        style={{ display: "flex", justifyContent: "center", margin: "10px" }}
-      >
-        <Typography variant="h6" component="div" color={"#2196f3"}>
-          SELECT YOUR SIGN IN METHOD
-        </Typography>
-      </div>
-      <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList onChange={handleChange} aria-label="lab API tabs example">
-            <Tab label="Admin" value="admin" />
-            <Tab label="Manager" value="manager" />
-            <Tab label="Employee" value="employee" />
-          </TabList>
+          <FormControl fullWidth>
+            <Box onSubmit={formik.handleSubmit} component="form" noValidate>
+              <Radio
+                checked={role === "admin"}
+                onChange={handleChange}
+                value="admin"
+                name="radio-buttons"
+                inputProps={{ "aria-label": "A" }}
+              />
+              <label>Admin</label>
+              <Radio
+                checked={role === "manager"}
+                onChange={handleChange}
+                value="manager"
+                name="radio-buttons"
+                inputProps={{ "aria-label": "A" }}
+              />
+              <label>Manager</label>
+              <Radio
+                checked={role === "employee"}
+                onChange={handleChange}
+                value="employee"
+                name="radio-buttons"
+                inputProps={{ "aria-label": "A" }}
+              />
+              <label>Employee</label>
+              <hr />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="emailId"
+                autoComplete="email"
+                autoFocus
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.emailId}
+                error={formik.touched.emailId && Boolean(formik.errors.emailId)}
+                helperText={formik.touched.emailId && formik.errors.emailId}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+                error={
+                  formik.touched.password && Boolean(formik.errors.password)
+                }
+                helperText={formik.touched.password && formik.errors.password}
+              />
+              <div style={{ color: "red" }}>{error}</div>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid item>
+                {role === "employee" && (
+                  <>
+                    Don't have an account?
+                    <Link
+                      underline="hover"
+                      variant="body2"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => router.replace("/sign-up")}
+                    >
+                      {" Sign Up"}
+                    </Link>
+                  </>
+                )}
+              </Grid>
+            </Box>
+          </FormControl>
         </Box>
-        <TabPanel value="admin">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Typography variant="h6" component="div" color={"#2196f3"}>
-              ADMIN LOGIN
-            </Typography>
-          </div>
-          <Login role="admin" />
-        </TabPanel>
-        <TabPanel value="manager">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Typography variant="h6" component="div" color={"#2196f3"}>
-              MANAGER LOGIN
-            </Typography>
-          </div>
-          <Login role="manager" />
-        </TabPanel>
-        <TabPanel value="employee">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Typography variant="h6" component="div" color={"#2196f3"}>
-              EMPLOYEE LOGIN
-            </Typography>
-          </div>
-          <Login role="employee" />
-        </TabPanel>
-      </TabContext>
-    </Box>
+      </Container>
+    </ThemeProvider>
   );
 };
+
 export default CommonDashboard;

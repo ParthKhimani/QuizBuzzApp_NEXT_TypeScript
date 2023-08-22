@@ -14,7 +14,7 @@ import Cookies from "js-cookie";
 
 const AdminDashboard = () => {
   const router = useRouter();
-  const [value, setValue] = useState("manager-table");
+  const [value, setValue] = useState("employee-table");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);

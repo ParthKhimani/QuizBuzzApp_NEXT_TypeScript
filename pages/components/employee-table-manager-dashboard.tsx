@@ -16,6 +16,8 @@ import QuizDataForEmployeeTable from "./quiz-data-for-employee-table";
 import Cookies from "js-cookie";
 import { JwtPayload } from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 const EmployeeTableManagerDashboard = () => {
   const router = useRouter();
@@ -36,7 +38,7 @@ const EmployeeTableManagerDashboard = () => {
     (employeeJSONString: string) => deleteEmployeeFn(employeeJSONString),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["employees"]);
+        queryClient.invalidateQueries();
       },
     }
   );
@@ -111,25 +113,19 @@ const EmployeeTableManagerDashboard = () => {
                           rowSpan={employeeQuery.data.data?.quizes?.length}
                         >
                           <Button
-                            variant="outlined"
-                            color="success"
-                            style={{ marginRight: "10px" }}
                             onClick={handleUpdateEmployee}
                             value={JSON.stringify(item)}
                           >
-                            Update
+                            <EditIcon />
                           </Button>
                           <Button
-                            variant="outlined"
-                            color="error"
-                            style={{ margin: "10px" }}
                             onClick={() => {
                               deleteEmployeeMutation.mutate(
                                 JSON.stringify(item)
                               );
                             }}
                           >
-                            Delete
+                            <DeleteIcon />
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -141,7 +137,9 @@ const EmployeeTableManagerDashboard = () => {
           </TableContainer>
         </>
       ) : (
-        <div style={{ fontWeight: "bolder", textAlign: "center" }}>
+        <div
+          style={{ fontWeight: "bolder", textAlign: "center", color: "red" }}
+        >
           *No candidates assigned in your technology yet !
         </div>
       )}

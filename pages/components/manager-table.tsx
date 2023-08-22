@@ -12,6 +12,9 @@ import { Manager } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteManagerFn, getManagerData } from "../api/apis";
 import { useRouter } from "next/router";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { MouseEventHandler } from "react";
 
 const ManagerTable = () => {
   const router = useRouter();
@@ -27,7 +30,7 @@ const ManagerTable = () => {
       deleteManagerFn(JSON.parse(managerJSONString)),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["managers"]);
+        queryClient.invalidateQueries();
       },
     }
   );
@@ -63,23 +66,17 @@ const ManagerTable = () => {
                   <TableCell>{item.technology.name}</TableCell>
                   <TableCell>
                     <Button
-                      variant="outlined"
-                      color="success"
-                      style={{ marginRight: "10px" }}
                       onClick={handleUpdateManager}
                       value={JSON.stringify(item)}
                     >
-                      Update
+                      <EditIcon />
                     </Button>
                     <Button
-                      variant="outlined"
-                      color="error"
-                      style={{ margin: "10px" }}
                       onClick={() => {
                         deleteManagerMutation.mutate(JSON.stringify(item));
                       }}
                     >
-                      Delete
+                      <DeleteIcon />
                     </Button>
                   </TableCell>
                 </TableRow>

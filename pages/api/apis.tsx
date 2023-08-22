@@ -1,6 +1,18 @@
+import { MyLoginValue, MySignUpValue } from "@/types";
+import Cookies from "js-cookie";
+
+const token = Cookies.get("token");
+
 export const getManagerData = async () => {
   const managerResponse = await fetch(
-    "http://localhost:3333/admin-dashboard/manager-data"
+    "http://localhost:3333/admin-dashboard/manager-data",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify({ token: token }),
+    }
   );
   const managerData = await managerResponse.json();
   return managerData;
@@ -8,7 +20,14 @@ export const getManagerData = async () => {
 
 export const getEmployeeData = async () => {
   const employeeResponse = await fetch(
-    "http://localhost:3333/admin-dashboard/employee-data"
+    "http://localhost:3333/admin-dashboard/employee-data",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify({ token: token }),
+    }
   );
   const employeeData = await employeeResponse.json();
   return employeeData;
@@ -104,43 +123,94 @@ export const GetQuizFn = async (employee: string) => {
     headers: {
       "Content-Type": "application/json;charset=utf-8",
     },
-    body: JSON.stringify({ employee: employee }),
+    body: JSON.stringify({ employee: employee, token: token }),
   });
   const result = await response.json();
   return result;
 };
 
-export const AdminLoginFn = async (formData: FormData) => {
+export const GetQuizByTechnologyFn = async (technology: string) => {
+  const response = await fetch("http://localhost:3333/get-quiz-by-technology", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify({ technology: technology, token: token }),
+  });
+  const result = await response.json();
+  return result;
+};
+
+export const AssignQuizFn = async (quiz: string, employee: string) => {
+  const response = await fetch("http://localhost:3333/assign-auiz", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify({ quiz: quiz, employee: employee, token: token }),
+  });
+  const result = response.json();
+  return result;
+};
+
+export const AbandonQuizFn = async (quiz: string, employee: string) => {
+  const response = await fetch("http://localhost:3333/abandon-auiz", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify({ quiz: quiz, employee: employee, token: token }),
+  });
+  const result = response.json();
+  return result;
+};
+
+export const GetEmployeeFn = async (employee: string) => {
+  const response = await fetch(
+    "http://localhost:3333/get-employee-data-to-assign-quiz",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify({ employee: employee, token: token }),
+    }
+  );
+  const result = response.json();
+  return result;
+};
+
+export const AdminLoginFn = async (values: MyLoginValue) => {
   const AdminResponse = await fetch("http://localhost:3333/admin-login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
     },
-    body: JSON.stringify(Object.fromEntries(formData)),
+    body: JSON.stringify(values),
   });
   const AdminLoginData = await AdminResponse.json();
   return AdminLoginData;
 };
 
-export const ManagerLoginFn = async (formData: FormData) => {
+export const ManagerLoginFn = async (values: MyLoginValue) => {
   const ManagerResponse = await fetch("http://localhost:3333/manager-login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
     },
-    body: JSON.stringify(Object.fromEntries(formData)),
+    body: JSON.stringify(values),
   });
   const ManagerLoginData = await ManagerResponse.json();
   return ManagerLoginData;
 };
 
-export const EmployeeLoginFn = async (formData: FormData) => {
+export const EmployeeLoginFn = async (values: MyLoginValue) => {
   const EmployeeResponse = await fetch("http://localhost:3333/employee-login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
     },
-    body: JSON.stringify(Object.fromEntries(formData)),
+    body: JSON.stringify(values),
   });
   const EmployeeLoginData = await EmployeeResponse.json();
   return EmployeeLoginData;
@@ -155,6 +225,7 @@ export const GetQuizDataFn = async (quizIndex: string, employee: string) => {
     body: JSON.stringify({
       index: quizIndex,
       employee: employee,
+      token: token,
     }),
   });
   const quizData = await quiz.json();
@@ -173,8 +244,21 @@ export const GetQuizDataWithAnswersFn = async (
     body: JSON.stringify({
       index: quizIndex,
       employee: employee,
+      token: token,
     }),
   });
   const quizData = await quiz.json();
   return quizData;
+};
+
+export const SignUpFn = async (values: MySignUpValue) => {
+  const response = await fetch("http://localhost:3333/employee-register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify(values),
+  });
+  const result = await response.json();
+  return result;
 };
