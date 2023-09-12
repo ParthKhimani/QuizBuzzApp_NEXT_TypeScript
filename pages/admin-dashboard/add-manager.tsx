@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -19,8 +19,8 @@ import Cookies from "js-cookie";
 const defaultTheme = createTheme();
 
 const AddManager = () => {
-  const [technology, setTechnology] = React.useState("");
-  const [error, setError] = React.useState<string>();
+  const [technology, setTechnology] = useState("");
+  const [error, setError] = useState<string>();
   const router = useRouter();
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -47,7 +47,7 @@ const AddManager = () => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <QuizIcon style={{ margin: "0px 10px" }} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -69,7 +69,7 @@ const AddManager = () => {
           <CssBaseline />
           <Box
             sx={{
-              marginTop: 8,
+              marginTop: 10,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",

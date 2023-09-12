@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -19,7 +19,7 @@ import Cookies from "js-cookie";
 const defaultTheme = createTheme();
 
 const UpdateEmployee = () => {
-  const [technology, setTechnology] = React.useState("");
+  const [technology, setTechnology] = useState("");
   const router = useRouter();
   const employeeData = JSON.parse(router.query.data as string);
 
@@ -42,7 +42,7 @@ const UpdateEmployee = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (employeeData) {
       setTechnology(employeeData.technology.name);
     }
@@ -50,7 +50,7 @@ const UpdateEmployee = () => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <QuizIcon style={{ margin: "0px 10px" }} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -72,7 +72,7 @@ const UpdateEmployee = () => {
           <CssBaseline />
           <Box
             sx={{
-              marginTop: 8,
+              marginTop: 10,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",

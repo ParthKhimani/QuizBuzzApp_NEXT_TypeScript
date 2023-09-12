@@ -41,7 +41,7 @@ const AnswerPage = () => {
           zIndex: 999,
         }}
       >
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar>
             <QuizIcon style={{ margin: "0px 10px" }} />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>

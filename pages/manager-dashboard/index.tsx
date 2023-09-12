@@ -21,8 +21,8 @@ const ManagerDashboard = () => {
   }
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+    <>
+      <AppBar position="fixed">
         <Toolbar>
           <QuizIcon style={{ margin: "0px 10px" }} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -39,38 +39,46 @@ const ManagerDashboard = () => {
           </Button>
         </Toolbar>
       </AppBar>
-      <div
-        style={{ display: "flex", justifyContent: "center", margin: "10px" }}
+      <Box
+        sx={{
+          marginTop: 10,
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
-        <Button
-          variant="outlined"
-          style={{ margin: "10px" }}
-          onClick={() => {
-            router.replace("/manager-dashboard/add-employee");
-          }}
+        <div
+          style={{ display: "flex", justifyContent: "center", margin: "10px" }}
         >
-          Add Employee
-        </Button>
-        <Button
-          variant="outlined"
-          style={{ margin: "10px" }}
-          onClick={() => {
-            router.replace("/manager-dashboard/add-quiz");
-          }}
+          <Button
+            variant="outlined"
+            style={{ margin: "10px" }}
+            onClick={() => {
+              router.replace("/manager-dashboard/add-employee");
+            }}
+          >
+            Add Employee
+          </Button>
+          <Button
+            variant="outlined"
+            style={{ margin: "10px" }}
+            onClick={() => {
+              router.replace("/manager-dashboard/add-quiz");
+            }}
+          >
+            Add Quiz
+          </Button>
+        </div>
+        <Typography
+          variant="h6"
+          component="div"
+          color={"#2196f3"}
+          textAlign={"center"}
         >
-          Add Quiz
-        </Button>
-      </div>
-      <Typography
-        variant="h6"
-        component="div"
-        color={"#2196f3"}
-        textAlign={"center"}
-      >
-        EMPLOYEE TABLE
-      </Typography>
-      <EmployeeTableManagerDashboard />
-    </Box>
+          EMPLOYEE TABLE
+        </Typography>
+        <EmployeeTableManagerDashboard />
+      </Box>
+    </>
   );
 };
 export default ManagerDashboard;

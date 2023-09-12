@@ -182,7 +182,7 @@ const AddQuiz: React.FC = () => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <QuizIcon style={{ margin: "0px 10px" }} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -203,7 +203,7 @@ const AddQuiz: React.FC = () => {
         <Box
           sx={{
             margin: "10px",
-            marginTop: 8,
+            marginTop: 10,
             width: "50%",
             display: "flex",
             flexDirection: "column",
@@ -301,7 +301,7 @@ const AddQuiz: React.FC = () => {
         <Box
           sx={{
             margin: "10px",
-            marginTop: 8,
+            marginTop: 10,
             width: "50%",
             display: "flex",
             flexDirection: "column",

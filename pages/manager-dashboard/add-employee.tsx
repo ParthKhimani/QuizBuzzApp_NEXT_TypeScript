@@ -57,7 +57,7 @@ const AddEmployee = () => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <QuizIcon style={{ margin: "0px 10px" }} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -79,7 +79,7 @@ const AddEmployee = () => {
           <CssBaseline />
           <Box
             sx={{
-              marginTop: 8,
+              marginTop: 10,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",

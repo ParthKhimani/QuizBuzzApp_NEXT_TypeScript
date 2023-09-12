@@ -148,7 +148,7 @@ const AssignQuiz = () => {
         <Toolbar>
           <QuizIcon style={{ margin: "0px 10px" }} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Welcome Admin
+            Welcome Manager
           </Typography>
           <Button
             color="inherit"
@@ -201,7 +201,7 @@ const AssignQuiz = () => {
           <Button
             variant="outlined"
             onClick={() => {
-              router.replace("/admin-dashboard");
+              router.replace("/manager-dashboard");
             }}
           >
             Go to Dashboard

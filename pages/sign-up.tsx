@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -20,8 +20,8 @@ import { SignUpFn } from "./api/apis";
 const defaultTheme = createTheme();
 
 const SignUp = () => {
-  const [error, setError] = React.useState<string>();
-  const [technology, setTechnology] = React.useState("");
+  const [error, setError] = useState<string>();
+  const [technology, setTechnology] = useState("");
   const router = useRouter();
 
   const validationSchema = yup.object({

@@ -14,7 +14,7 @@ import Cookies from "js-cookie";
 
 const AdminDashboard = () => {
   const router = useRouter();
-  const [value, setValue] = useState("employee-table");
+  const [value, setValue] = useState("manager-table");
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -22,7 +22,7 @@ const AdminDashboard = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <QuizIcon style={{ margin: "0px 10px" }} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -39,78 +39,90 @@ const AdminDashboard = () => {
           </Button>
         </Toolbar>
       </AppBar>
-      <div
-        style={{ display: "flex", justifyContent: "center", margin: "10px" }}
+      <Box
+        sx={{
+          marginTop: 10,
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
-        <Button
-          variant="outlined"
-          style={{ margin: "10px" }}
-          onClick={() => router.replace("/admin-dashboard/add-manager")}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            margin: " 10px",
+          }}
         >
-          Add Manager
-        </Button>
-        <Button
-          variant="outlined"
-          style={{ margin: "10px" }}
-          onClick={() => router.replace("/admin-dashboard/add-employee")}
-        >
-          Add Employee
-        </Button>
-        <Button
-          variant="outlined"
-          style={{ margin: "10px" }}
-          onClick={() => router.replace("/admin-dashboard/add-quiz")}
-        >
-          Add Quiz
-        </Button>
-      </div>
+          <Button
+            variant="outlined"
+            style={{ margin: " 10px" }}
+            onClick={() => router.replace("/admin-dashboard/add-manager")}
+          >
+            Add Manager
+          </Button>
+          <Button
+            variant="outlined"
+            style={{ margin: "10px" }}
+            onClick={() => router.replace("/admin-dashboard/add-employee")}
+          >
+            Add Employee
+          </Button>
+          <Button
+            variant="outlined"
+            style={{ margin: "10px" }}
+            onClick={() => router.replace("/admin-dashboard/add-quiz")}
+          >
+            Add Quiz
+          </Button>
+        </div>
 
-      <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList onChange={handleChange} aria-label="lab API tabs example">
-            <Tab label="Manager Table" value="manager-table" />
-            <Tab label="Employee Table" value="employee-table" />
-          </TabList>
-        </Box>
-        <TabPanel value="manager-table">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Typography
-              variant="h6"
-              component="div"
-              color={"#2196f3"}
-              margin={"auto"}
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList onChange={handleChange} aria-label="lab API tabs example">
+              <Tab label="Manager Table" value="manager-table" />
+              <Tab label="Employee Table" value="employee-table" />
+            </TabList>
+          </Box>
+          <TabPanel value="manager-table">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
-              MANAGER TABLE
-            </Typography>
-            <hr />
-            <ManagerTable />
-          </div>
-        </TabPanel>
-        <TabPanel value="employee-table">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Typography
-              variant="h6"
-              component="div"
-              color={"#2196f3"}
-              margin={"auto"}
+              <Typography
+                variant="h6"
+                component="div"
+                color={"#2196f3"}
+                margin={"auto"}
+              >
+                MANAGER TABLE
+              </Typography>
+              <hr />
+              <ManagerTable />
+            </div>
+          </TabPanel>
+          <TabPanel value="employee-table">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
-              EMPLOYEE TABLE
-            </Typography>
-            <hr />
-            <EmployeeTable />
-          </div>
-        </TabPanel>
-      </TabContext>
+              <Typography
+                variant="h6"
+                component="div"
+                color={"#2196f3"}
+                margin={"auto"}
+              >
+                EMPLOYEE TABLE
+              </Typography>
+              <hr />
+              <EmployeeTable />
+            </div>
+          </TabPanel>
+        </TabContext>
+      </Box>
     </Box>
   );
 };

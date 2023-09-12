@@ -14,7 +14,6 @@ import { deleteManagerFn, getManagerData } from "../api/apis";
 import { useRouter } from "next/router";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { MouseEventHandler } from "react";
 
 const ManagerTable = () => {
   const router = useRouter();

@@ -18,6 +18,7 @@ import { JwtPayload } from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 
 const EmployeeTableManagerDashboard = () => {
   const router = useRouter();
@@ -57,6 +58,16 @@ const EmployeeTableManagerDashboard = () => {
     });
   };
 
+  const handleAssignQuiz = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const employeeObj = event.currentTarget.getAttribute("value");
+    const technology = JSON.parse(employeeObj!).technology;
+    const employee = JSON.parse(employeeObj!).emailId;
+    router.push({
+      pathname: "/manager-dashboard/assign-quiz",
+      query: { technology: technology?._id, employee: employee },
+    });
+  };
+
   return (
     <>
       <br />
@@ -81,6 +92,7 @@ const EmployeeTableManagerDashboard = () => {
                   <TableCell>Employee's mail Id</TableCell>
                   <TableCell>Technology</TableCell>
                   <TableCell>Scored in Quizes</TableCell>
+                  <TableCell>Assign Quiz</TableCell>
                   <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
@@ -109,6 +121,14 @@ const EmployeeTableManagerDashboard = () => {
                             <QuizDataForEmployeeTable item={item} />
                           </TableCell>
                         )}
+                        <TableCell>
+                          <Button
+                            value={JSON.stringify(item)}
+                            onClick={handleAssignQuiz}
+                          >
+                            <AssignmentIcon />
+                          </Button>
+                        </TableCell>
                         <TableCell
                           rowSpan={employeeQuery.data.data?.quizes?.length}
                         >

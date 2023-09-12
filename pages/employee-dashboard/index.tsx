@@ -57,7 +57,7 @@ const EmployeeDashboard = () => {
           Quiz {count}
         </Typography>
         <Typography sx={{ textAlign: "center" }} variant="h6" component="div">
-          {quizDataQuery.data?.quiz?.quizes[count - 1].quiz.questions.length}{" "}
+          {quizDataQuery.data?.quiz?.quizes[count - 1]?.quiz?.questions?.length}{" "}
           Questions
         </Typography>
       </CardContent>
@@ -139,56 +139,56 @@ const EmployeeDashboard = () => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Toolbar>
-            <QuizIcon style={{ margin: "0px 10px" }} />
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Welcome Candidate
-            </Typography>
-            <Button
-              color="inherit"
-              onClick={() => {
-                router.replace("/");
-                Cookies.remove("token");
-              }}
-            >
-              sign out
-            </Button>
-          </Toolbar>
-        </AppBar>
-      </Box>
-      <div
-        style={{ display: "flex", justifyContent: "center", margin: "10px" }}
-      >
-        <Typography variant="h6" component="div" color="#2196f3">
-          No. of quizzes assigned to you:{" "}
-          {quizDataQuery.data?.quiz?.quizes?.length}
-        </Typography>
-      </div>
-      {quizDataQuery.isLoading && (
-        <Typography
-          variant="h3"
-          component="div"
-          color="#2196f3"
-          style={{ textAlign: "center" }}
+      <AppBar position="fixed">
+        <Toolbar>
+          <QuizIcon style={{ margin: "0px 10px" }} />
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Welcome Candidate
+          </Typography>
+          <Button
+            color="inherit"
+            onClick={() => {
+              router.replace("/");
+              Cookies.remove("token");
+            }}
+          >
+            sign out
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <Box sx={{ marginTop: 10 }}>
+        <div
+          style={{ display: "flex", justifyContent: "center", margin: "10px" }}
         >
-          Please Wait...
-        </Typography>
-      )}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          margin: "10px",
-        }}
-      >
-        {renderCards()}
-      </div>
-      <hr />
-      <div style={{ width: "40%", margin: "auto" }}>
-        <HighChart data={quizDataQuery.data?.quiz?.quizes} />
-      </div>
+          <Typography variant="h6" component="div" color="#2196f3">
+            No. of quizzes assigned to you:{" "}
+            {quizDataQuery.data?.quiz?.quizes?.length}
+          </Typography>
+        </div>
+        {quizDataQuery.isLoading && (
+          <Typography
+            variant="h3"
+            component="div"
+            color="#2196f3"
+            style={{ textAlign: "center" }}
+          >
+            Please Wait...
+          </Typography>
+        )}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            margin: "10px",
+          }}
+        >
+          {renderCards()}
+        </div>
+        <hr />
+        <div style={{ width: "40%", margin: "auto" }}>
+          <HighChart data={quizDataQuery.data?.quiz?.quizes} />
+        </div>
+      </Box>
     </>
   );
 };
