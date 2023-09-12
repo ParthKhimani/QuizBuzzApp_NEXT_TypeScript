@@ -15,13 +15,35 @@ import { AppBar, Toolbar } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { updateManagerFn } from "../api/apis";
 import Cookies from "js-cookie";
+import { Manager, Technology } from "@/types";
 
 const defaultTheme = createTheme();
 
 const UpdateManager = () => {
   const [technology, setTechnology] = useState("");
   const router = useRouter();
-  const managerData = JSON.parse((router.query.data as string) || "");
+  // const managerData = JSON.parse((router.query.data as string) || "");
+
+  let managerTechnology: Technology = {
+    _id: "",
+    name: "",
+    managers: [],
+    employees: [],
+  };
+
+  let managerData: Manager = {
+    emailId: "",
+    password: "",
+    technology: managerTechnology,
+  };
+
+  if (router.query.data) {
+    try {
+      managerData = JSON.parse(String(router.query.data));
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+    }
+  }
 
   const handleChange = (event: SelectChangeEvent) => {
     setTechnology(event.target.value as string);

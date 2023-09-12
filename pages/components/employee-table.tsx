@@ -84,10 +84,10 @@ const EmployeeTable = () => {
                   <TableCell rowSpan={employeeQuery.data.data?.quizes?.length}>
                     {item.technology.name}
                   </TableCell>
-                  {item.quizes.length === 0 && (
+                  {item?.quizes?.length === 0 && (
                     <TableCell>Assign a Quiz to check the score !</TableCell>
                   )}
-                  {item.quizes.length !== 0 && (
+                  {item?.quizes?.length !== 0 && (
                     <TableCell>
                       <QuizDataForEmployeeTable item={item} />
                     </TableCell>

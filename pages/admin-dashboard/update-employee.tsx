@@ -15,13 +15,36 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import { UpdateEmployeeFn } from "../api/apis";
 import Cookies from "js-cookie";
+import { Employee, Technology } from "@/types";
 
 const defaultTheme = createTheme();
 
 const UpdateEmployee = () => {
   const [technology, setTechnology] = useState("");
   const router = useRouter();
-  const employeeData = JSON.parse((router.query.data as string) || "");
+  // const employeeData = JSON.parse((router.query.data as string) || "");
+
+  let employeeTechnology: Technology = {
+    _id: "",
+    name: "",
+    managers: [],
+    employees: [],
+  };
+
+  let employeeData: Employee = {
+    _id: "",
+    emailId: "",
+    password: "",
+    technology: employeeTechnology,
+  };
+
+  if (router.query.data) {
+    try {
+      employeeData = JSON.parse(String(router.query.data));
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+    }
+  }
 
   const handleChange = (event: SelectChangeEvent) => {
     setTechnology(event.target.value as string);

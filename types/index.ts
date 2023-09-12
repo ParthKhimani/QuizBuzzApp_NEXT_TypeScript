@@ -22,8 +22,9 @@ export interface Quiz {
 export interface Employee {
   _id: string;
   emailId: string;
+  password?: string;
   technology: Technology;
-  quizes: Quiz[];
+  quizes?: Quiz[];
 }
 
 export interface Option {

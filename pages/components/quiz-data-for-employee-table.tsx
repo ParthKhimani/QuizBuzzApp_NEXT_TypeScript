@@ -57,7 +57,7 @@ const QuizDataForEmployeeTable: React.FC<EmployeeProps> = ({ item }) => {
                   <TableCell style={{ fontWeight: "bolder" }}>Score</TableCell>
                 </TableHead>
                 <TableBody>
-                  {item.quizes.map((quiz: Quiz, index: number) => (
+                  {item?.quizes?.map((quiz: Quiz, index: number) => (
                     <>
                       {quiz.attempted && (
                         <TableRow key={index}>
