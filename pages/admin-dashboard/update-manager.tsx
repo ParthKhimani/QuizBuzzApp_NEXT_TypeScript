@@ -21,7 +21,7 @@ const defaultTheme = createTheme();
 const UpdateManager = () => {
   const [technology, setTechnology] = useState("");
   const router = useRouter();
-  const managerData = JSON.parse(router.query.data as string);
+  const managerData = JSON.parse((router.query.data as string) || "");
 
   const handleChange = (event: SelectChangeEvent) => {
     setTechnology(event.target.value as string);
