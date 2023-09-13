@@ -161,7 +161,7 @@ const AssignQuiz = () => {
           </Button>
         </Toolbar>
       </AppBar>
-      <Box sx={{ marginTop: 2 }}>
+      <Box sx={{ marginTop: 10 }}>
         {quizDataQuery.isLoading && (
           <Typography
             variant="h3"
