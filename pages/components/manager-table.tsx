@@ -22,6 +22,7 @@ const ManagerTable = () => {
   const managerQuery = useQuery({
     queryFn: getManagerData,
     queryKey: ["managers"],
+    refetchInterval: 1000,
   });
 
   const deleteManagerMutation = useMutation(

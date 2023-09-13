@@ -24,6 +24,7 @@ const EmployeeTable = () => {
   const employeeQuery = useQuery({
     queryFn: getEmployeeData,
     queryKey: ["employees"],
+    refetchInterval: 1000,
   });
 
   const deleteEmployeeMutation = useMutation(
