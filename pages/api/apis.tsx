@@ -3,7 +3,7 @@ import "dotenv/config";
 
 export const getManagerData = async () => {
   const managerResponse = await fetch(
-    `${process.env.BASE_URL}/admin-dashboard/manager-data`
+    `${process.env.BASE_URL}admin-dashboard/manager-data`
   );
   const managerData = await managerResponse.json();
   return managerData;
