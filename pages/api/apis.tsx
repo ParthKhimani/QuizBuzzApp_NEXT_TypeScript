@@ -1,18 +1,8 @@
 import { MyLoginValue, MySignUpValue } from "@/types";
-import Cookies from "js-cookie";
-
-const token = Cookies.get("token");
 
 export const getManagerData = async () => {
   const managerResponse = await fetch(
-    "https://quiz-app-backend-parthkhimani.vercel.app/admin-dashboard/manager-data",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify({ token: token }),
-    }
+    "https://quiz-app-backend-parthkhimani.vercel.app/admin-dashboard/manager-data"
   );
   const managerData = await managerResponse.json();
   return managerData;
@@ -20,14 +10,7 @@ export const getManagerData = async () => {
 
 export const getEmployeeData = async () => {
   const employeeResponse = await fetch(
-    "https://quiz-app-backend-parthkhimani.vercel.app/admin-dashboard/employee-data",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify({ token: token }),
-    }
+    "https://quiz-app-backend-parthkhimani.vercel.app/admin-dashboard/employee-data"
   );
   const employeeData = await employeeResponse.json();
   return employeeData;
@@ -131,14 +114,7 @@ export const AddEmployeeFn = async (formData: FormData) => {
 
 export const GetQuizFn = async (employee: string) => {
   const response = await fetch(
-    "https://quiz-app-backend-parthkhimani.vercel.app/get-quiz",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify({ employee: employee, token: token }),
-    }
+    "https://quiz-app-backend-parthkhimani.vercel.app/get-quiz"
   );
   const result = await response.json();
   return result;
@@ -146,14 +122,7 @@ export const GetQuizFn = async (employee: string) => {
 
 export const GetQuizByTechnologyFn = async (technology: string) => {
   const response = await fetch(
-    "https://quiz-app-backend-parthkhimani.vercel.app/get-quiz-by-technology",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify({ technology: technology, token: token }),
-    }
+    "https://quiz-app-backend-parthkhimani.vercel.app/get-quiz-by-technology"
   );
   const result = await response.json();
   return result;
@@ -161,14 +130,7 @@ export const GetQuizByTechnologyFn = async (technology: string) => {
 
 export const AssignQuizFn = async (quiz: string, employee: string) => {
   const response = await fetch(
-    "https://quiz-app-backend-parthkhimani.vercel.app/assign-auiz",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify({ quiz: quiz, employee: employee, token: token }),
-    }
+    "https://quiz-app-backend-parthkhimani.vercel.app/assign-auiz"
   );
   const result = response.json();
   return result;
@@ -182,7 +144,7 @@ export const AbandonQuizFn = async (quiz: string, employee: string) => {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
-      body: JSON.stringify({ quiz: quiz, employee: employee, token: token }),
+      body: JSON.stringify({ quiz: quiz, employee: employee }),
     }
   );
   const result = response.json();
@@ -197,7 +159,7 @@ export const GetEmployeeFn = async (employee: string) => {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
-      body: JSON.stringify({ employee: employee, token: token }),
+      body: JSON.stringify({ employee: employee }),
     }
   );
   const result = response.json();
@@ -260,7 +222,6 @@ export const GetQuizDataFn = async (quizIndex: string, employee: string) => {
       body: JSON.stringify({
         index: quizIndex,
         employee: employee,
-        token: token,
       }),
     }
   );
@@ -282,7 +243,6 @@ export const GetQuizDataWithAnswersFn = async (
       body: JSON.stringify({
         index: quizIndex,
         employee: employee,
-        token: token,
       }),
     }
   );
