@@ -1,5 +1,6 @@
 import { MyLoginValue, MySignUpValue } from "@/types";
 import Cookies from "js-cookie";
+import "dotenv/config";
 
 export const getManagerData = async () => {
   const managerResponse = await fetch(
