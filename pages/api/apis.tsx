@@ -128,7 +128,10 @@ export const GetQuizFn = async (employee: string) => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/get-quiz`, {
     headers: new Headers({
       auth: Cookies.get("token") as string,
+      "Content-Type": "application/json;charset=utf-8",
     }),
+    method: "POST",
+    body: JSON.stringify({ employee: employee }),
   });
   const result = await response.json();
   return result;
@@ -140,7 +143,10 @@ export const GetQuizByTechnologyFn = async (technology: string) => {
     {
       headers: new Headers({
         auth: Cookies.get("token") as string,
+        "Content-Type": "application/json;charset=utf-8",
       }),
+      method: "POST",
+      body: JSON.stringify({ technology: technology }),
     }
   );
   const result = await response.json();
