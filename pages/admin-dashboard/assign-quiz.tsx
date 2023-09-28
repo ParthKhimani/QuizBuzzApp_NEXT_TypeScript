@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AbandonQuizFn,
   AssignQuizFn,
+  DeleteQuizFn,
   GetEmployeeFn,
   GetQuizByTechnologyFn,
 } from "../api/apis";
@@ -57,6 +58,17 @@ const AssignQuiz = () => {
     }
   };
 
+  const handleDeleteQuiz = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    const quiz = event.currentTarget.value;
+    const result = await DeleteQuizFn(quiz, employee);
+    switch (result.status) {
+      case "200":
+        queryClient.invalidateQueries();
+    }
+  };
+
   const cardContent = (count: number) => (
     <>
       <CardContent>
@@ -106,6 +118,20 @@ const AssignQuiz = () => {
           </Button>
         </CardActions>
       )}
+      <hr />
+      <CardActions>
+        <Button
+          color="error"
+          sx={{
+            width: "100%",
+          }}
+          size="medium"
+          onClick={handleDeleteQuiz}
+          value={quizDataQuery.data?.quiz[count - 1]._id}
+        >
+          Delete Quiz
+        </Button>
+      </CardActions>
     </>
   );
 

@@ -161,11 +161,14 @@ export const GetQuizByTechnologyFn = async (technology: string) => {
 
 export const AssignQuizFn = async (quiz: string, employee: string) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/assign-auiz`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/assign-quiz`,
     {
+      method: "POST",
       headers: new Headers({
         auth: Cookies.get("token") as string,
+        "Content-Type": "application/json;charset=utf-8",
       }),
+      body: JSON.stringify({ quiz: quiz, employee: employee }),
     }
   );
   const result = response.json();
@@ -174,7 +177,23 @@ export const AssignQuizFn = async (quiz: string, employee: string) => {
 
 export const AbandonQuizFn = async (quiz: string, employee: string) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/abandon-auiz`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/abandon-quiz`,
+    {
+      method: "POST",
+      headers: new Headers({
+        auth: Cookies.get("token") as string,
+        "Content-Type": "application/json;charset=utf-8",
+      }),
+      body: JSON.stringify({ quiz: quiz, employee: employee }),
+    }
+  );
+  const result = response.json();
+  return result;
+};
+
+export const DeleteQuizFn = async (quiz: string, employee: string) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/delete-quiz`,
     {
       method: "POST",
       headers: new Headers({
@@ -319,12 +338,14 @@ export const GetTechnologiesFn = async () => {
 };
 
 export const AddQuizFn = async (questions: Question[], technology: string) => {
+  console.log(questions, technology);
   const quiz = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/add-quiz`, {
     method: "POST",
     headers: new Headers({
       auth: Cookies.get("token") as string,
+      "Content-Type": "application/json;charset=utf-8",
     }),
-    body: JSON.stringify({ questions, technology }),
+    body: JSON.stringify({ questions: questions, technology: technology }),
   });
   const quizData = await quiz.json();
   return quizData;
