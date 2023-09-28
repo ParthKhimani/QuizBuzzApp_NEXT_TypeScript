@@ -7,6 +7,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { Manager } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -45,45 +46,77 @@ const ManagerTable = () => {
   return (
     <>
       <br />
-      <TableContainer
-        component={Paper}
-        style={{ width: "75%", margin: "auto" }}
-      >
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Manager's mail Id</TableCell>
-              <TableCell>Technology Assigned</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {managerQuery.data?.data?.map(
-              (item: Manager, index: React.Key | null | undefined) => (
-                <TableRow key={index}>
-                  <TableCell>{item.emailId}</TableCell>
-                  <TableCell>{item.technology.name}</TableCell>
-                  <TableCell>
-                    <Button
-                      onClick={handleUpdateManager}
-                      value={JSON.stringify(item)}
-                    >
-                      <EditIcon />
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        deleteManagerMutation.mutate(JSON.stringify(item));
-                      }}
-                    >
-                      <DeleteIcon />
-                    </Button>
-                  </TableCell>
+      {managerQuery.isLoading && (
+        <Typography
+          variant="h3"
+          component="div"
+          color="#2196f3"
+          style={{ textAlign: "center" }}
+        >
+          Loading...
+        </Typography>
+      )}
+      {managerQuery.isFetched && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Typography
+            variant="h6"
+            component="div"
+            color={"#2196f3"}
+            margin={"auto"}
+          >
+            MANAGER TABLE
+          </Typography>
+          <hr />
+          <TableContainer
+            component={Paper}
+            style={{ width: "75%", margin: "auto" }}
+          >
+            <Table
+              sx={{ minWidth: 650 }}
+              size="small"
+              aria-label="a dense table"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>Manager's mail Id</TableCell>
+                  <TableCell>Technology Assigned</TableCell>
+                  <TableCell>Action</TableCell>
                 </TableRow>
-              )
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+              </TableHead>
+              <TableBody>
+                {managerQuery.data?.data?.map(
+                  (item: Manager, index: React.Key | null | undefined) => (
+                    <TableRow key={index}>
+                      <TableCell>{item.emailId}</TableCell>
+                      <TableCell>{item.technology.name}</TableCell>
+                      <TableCell>
+                        <Button
+                          onClick={handleUpdateManager}
+                          value={JSON.stringify(item)}
+                        >
+                          <EditIcon />
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            deleteManagerMutation.mutate(JSON.stringify(item));
+                          }}
+                        >
+                          <DeleteIcon />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      )}
     </>
   );
 };

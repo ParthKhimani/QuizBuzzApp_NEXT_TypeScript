@@ -71,6 +71,7 @@ const SignUp = () => {
     <ThemeProvider theme={defaultTheme}>
       <Container
         component="main"
+        maxWidth="sm"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -82,7 +83,6 @@ const SignUp = () => {
         <CssBaseline />
         <Box
           sx={{
-            width: "50%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",

@@ -1,4 +1,4 @@
-import { MyLoginValue, MySignUpValue } from "@/types";
+import { MyLoginValue, MySignUpValue, Question, Technology } from "@/types";
 import Cookies from "js-cookie";
 import "dotenv/config";
 
@@ -34,9 +34,10 @@ export const deleteManagerFn = async (managerJSONString: string) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/admin-dashboard/delete-manager-data`,
     {
       method: "POST",
-      headers: {
+      headers: new Headers({
+        auth: Cookies.get("token") as string,
         "Content-Type": "application/json;charset=utf-8",
-      },
+      }),
       body: JSON.stringify(data),
     }
   );
@@ -52,9 +53,10 @@ export const deleteEmployeeFn = async (employeeJSONString: string) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/admin-dashboard/delete-employee-data`,
     {
       method: "POST",
-      headers: {
+      headers: new Headers({
+        auth: Cookies.get("token") as string,
         "Content-Type": "application/json;charset=utf-8",
-      },
+      }),
       body: JSON.stringify(data),
     }
   );
@@ -69,9 +71,10 @@ export const updateManagerFn = async (formData: FormData) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/update-manager`,
     {
       method: "POST",
-      headers: {
+      headers: new Headers({
+        auth: Cookies.get("token") as string,
         "Content-Type": "application/json;charset=utf-8",
-      },
+      }),
       body: JSON.stringify(Object.fromEntries(formData)),
     }
   );
@@ -84,9 +87,10 @@ export const UpdateEmployeeFn = async (formData: FormData) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/update-employee`,
     {
       method: "POST",
-      headers: {
+      headers: new Headers({
+        auth: Cookies.get("token") as string,
         "Content-Type": "application/json;charset=utf-8",
-      },
+      }),
       body: JSON.stringify(Object.fromEntries(formData)),
     }
   );
@@ -99,9 +103,10 @@ export const AddManagerFn = async (formData: FormData) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/add-manager`,
     {
       method: "POST",
-      headers: {
+      headers: new Headers({
+        auth: Cookies.get("token") as string,
         "Content-Type": "application/json;charset=utf-8",
-      },
+      }),
       body: JSON.stringify(Object.fromEntries(formData)),
     }
   );
@@ -114,9 +119,10 @@ export const AddEmployeeFn = async (formData: FormData) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/add-employee`,
     {
       method: "POST",
-      headers: {
+      headers: new Headers({
+        auth: Cookies.get("token") as string,
         "Content-Type": "application/json;charset=utf-8",
-      },
+      }),
       body: JSON.stringify(Object.fromEntries(formData)),
     }
   );
@@ -171,9 +177,10 @@ export const AbandonQuizFn = async (quiz: string, employee: string) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/abandon-auiz`,
     {
       method: "POST",
-      headers: {
+      headers: new Headers({
+        auth: Cookies.get("token") as string,
         "Content-Type": "application/json;charset=utf-8",
-      },
+      }),
       body: JSON.stringify({ quiz: quiz, employee: employee }),
     }
   );
@@ -186,9 +193,10 @@ export const GetEmployeeFn = async (employee: string) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/get-employee-data-to-assign-quiz`,
     {
       method: "POST",
-      headers: {
+      headers: new Headers({
+        auth: Cookies.get("token") as string,
         "Content-Type": "application/json;charset=utf-8",
-      },
+      }),
       body: JSON.stringify({ employee: employee }),
     }
   );
@@ -246,9 +254,10 @@ export const GetQuizDataFn = async (quizIndex: string, employee: string) => {
     `${process.env.NEXT_PUBLIC_BASE_URL}/get-quiz-data`,
     {
       method: "POST",
-      headers: {
+      headers: new Headers({
+        auth: Cookies.get("token") as string,
         "Content-Type": "application/json;charset=utf-8",
-      },
+      }),
       body: JSON.stringify({
         index: quizIndex,
         employee: employee,
@@ -267,9 +276,10 @@ export const GetQuizDataWithAnswersFn = async (
     `${process.env.NEXT_PUBLIC_BASE_URL}/get-quiz-data-with-answers`,
     {
       method: "POST",
-      headers: {
+      headers: new Headers({
+        auth: Cookies.get("token") as string,
         "Content-Type": "application/json;charset=utf-8",
-      },
+      }),
       body: JSON.stringify({
         index: quizIndex,
         employee: employee,
@@ -293,4 +303,29 @@ export const SignUpFn = async (values: MySignUpValue) => {
   );
   const result = await response.json();
   return result;
+};
+
+export const GetTechnologiesFn = async () => {
+  const technologies = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/get-technologies`,
+    {
+      headers: new Headers({
+        auth: Cookies.get("token") as string,
+      }),
+    }
+  );
+  const technologiesData = await technologies.json();
+  return technologiesData;
+};
+
+export const AddQuizFn = async (questions: Question[], technology: string) => {
+  const quiz = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/add-quiz`, {
+    method: "POST",
+    headers: new Headers({
+      auth: Cookies.get("token") as string,
+    }),
+    body: JSON.stringify({ questions, technology }),
+  });
+  const quizData = await quiz.json();
+  return quizData;
 };

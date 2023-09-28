@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -26,6 +26,8 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import { Option, Question, Technology } from "@/types";
 import Cookies from "js-cookie";
+import { useQuery } from "@tanstack/react-query";
+import { AddQuizFn, GetTechnologiesFn } from "../api/apis";
 
 const AddQuiz: React.FC = () => {
   const router = useRouter();
@@ -37,7 +39,6 @@ const AddQuiz: React.FC = () => {
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [technology, setTechnology] = useState("");
-  const [technologies, setTechnologies] = useState<Technology[]>([]);
   const [options, setOptions] = useState<Option[]>([
     { id: 1, value: "" },
     { id: 2, value: "" },
@@ -45,17 +46,10 @@ const AddQuiz: React.FC = () => {
     { id: 4, value: "" },
   ]);
 
-  useEffect(() => {
-    fetch("http://localhost:3333/get-technologies", {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.status === "200") {
-          setTechnologies(result.technologies);
-        }
-      });
-  }, []);
+  const technologiesQuery = useQuery({
+    queryFn: GetTechnologiesFn,
+    queryKey: ["technologies"],
+  });
 
   const handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentQuestion(event.target.value);
@@ -143,25 +137,16 @@ const AddQuiz: React.FC = () => {
     setCurrentAnswer(answer as string);
   };
 
-  const handleSaveQuiz = () => {
+  const handleSaveQuiz = async () => {
     if (questions.length === 0 || technology === "") {
       setQuizOpenError(true);
     } else {
-      fetch("http://localhost:3333/add-quiz", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-        body: JSON.stringify({ questions, technology }),
-      })
-        .then((response) => response.json())
-        .then((result) => {
-          switch (result.status) {
-            case "202":
-              setEmailOpenSuccess(true);
-              break;
-          }
-        });
+      const result = await AddQuizFn(questions, technology);
+      switch (result?.status) {
+        case "202":
+          setEmailOpenSuccess(true);
+          break;
+      }
     }
   };
 
@@ -330,9 +315,11 @@ const AddQuiz: React.FC = () => {
               name="employee"
               onChange={handleTechnologyChange}
             >
-              {technologies.map((technology) => (
-                <MenuItem value={technology.name}>{technology.name}</MenuItem>
-              ))}
+              {technologiesQuery?.data?.technologies.map(
+                (technology: Technology) => (
+                  <MenuItem value={technology.name}>{technology.name}</MenuItem>
+                )
+              )}
             </Select>
           </FormControl>
           <TableContainer>

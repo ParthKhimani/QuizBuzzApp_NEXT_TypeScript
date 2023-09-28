@@ -68,6 +68,16 @@ const AnswerPage = () => {
           borderRadius: "10px",
         }}
       >
+        {quizQuery.isLoading && (
+          <Typography
+            variant="h3"
+            component="div"
+            color="#2196f3"
+            style={{ textAlign: "center" }}
+          >
+            Loading...
+          </Typography>
+        )}
         {questionValue?.map((questionObj, index) => {
           const selectedAnswer = quizQuery.data?.selectedAnswers![index].answer;
           const correctAnswer = quizQuery.data?.answers![index];
@@ -124,14 +134,16 @@ const AnswerPage = () => {
             </>
           );
         })}
-        <Button
-          variant="outlined"
-          onClick={() => {
-            router.replace("/employee-dashboard");
-          }}
-        >
-          Go to Dashboard
-        </Button>
+        {quizQuery.isFetched && (
+          <Button
+            variant="outlined"
+            onClick={() => {
+              router.replace("/employee-dashboard");
+            }}
+          >
+            Go to Dashboard
+          </Button>
+        )}
       </Box>
     </>
   );

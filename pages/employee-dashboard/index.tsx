@@ -172,7 +172,7 @@ const EmployeeDashboard = () => {
             color="#2196f3"
             style={{ textAlign: "center" }}
           >
-            Please Wait...
+            Loading...
           </Typography>
         )}
         <div

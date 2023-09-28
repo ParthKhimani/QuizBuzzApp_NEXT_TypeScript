@@ -169,44 +169,48 @@ const AssignQuiz = () => {
             color="#2196f3"
             style={{ textAlign: "center" }}
           >
-            Please Wait...
+            Loading...
           </Typography>
         )}
-        <Typography
-          variant="h6"
-          component="div"
-          color="#2196f3"
-          style={{ textAlign: "center" }}
-        >
-          Quizes found for candidate's relavant technology
-        </Typography>
-        <hr />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            margin: "10px",
-          }}
-        >
-          {renderCards()}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            width: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Button
-            variant="outlined"
-            onClick={() => {
-              router.replace("/admin-dashboard");
-            }}
-          >
-            Go to Dashboard
-          </Button>
-        </div>
+        {quizDataQuery.isFetched && (
+          <>
+            <Typography
+              variant="h6"
+              component="div"
+              color="#2196f3"
+              style={{ textAlign: "center" }}
+            >
+              Quizes found for candidate's relavant technology
+            </Typography>
+            <hr />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                margin: "10px",
+              }}
+            >
+              {renderCards()}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  router.replace("/admin-dashboard");
+                }}
+              >
+                Go to Dashboard
+              </Button>
+            </div>
+          </>
+        )}
       </Box>
     </>
   );

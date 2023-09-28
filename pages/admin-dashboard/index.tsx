@@ -84,42 +84,10 @@ const AdminDashboard = () => {
             </TabList>
           </Box>
           <TabPanel value="manager-table">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Typography
-                variant="h6"
-                component="div"
-                color={"#2196f3"}
-                margin={"auto"}
-              >
-                MANAGER TABLE
-              </Typography>
-              <hr />
-              <ManagerTable />
-            </div>
+            <ManagerTable />
           </TabPanel>
           <TabPanel value="employee-table">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Typography
-                variant="h6"
-                component="div"
-                color={"#2196f3"}
-                margin={"auto"}
-              >
-                EMPLOYEE TABLE
-              </Typography>
-              <hr />
-              <EmployeeTable />
-            </div>
+            <EmployeeTable />
           </TabPanel>
         </TabContext>
       </Box>
