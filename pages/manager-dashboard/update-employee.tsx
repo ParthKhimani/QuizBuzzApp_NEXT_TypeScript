@@ -13,7 +13,7 @@ import { AppBar, Toolbar } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import { UpdateEmployeeFn } from "../api/apis";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { JwtPayload } from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
@@ -36,6 +36,12 @@ const UpdateEmployee = () => {
   const handleChange = (event: SelectChangeEvent) => {
     setTechnology(event.target.value as string);
   };
+
+  useEffect(() => {
+    if (managerTechnology) {
+      setTechnology(managerTechnology);
+    }
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -124,7 +130,6 @@ const UpdateEmployee = () => {
                   name="technology"
                   label="Technology"
                   onChange={handleChange}
-                  defaultValue={managerTechnology ? managerTechnology : ""}
                 >
                   <MenuItem value={managerTechnology}>
                     {managerTechnology}

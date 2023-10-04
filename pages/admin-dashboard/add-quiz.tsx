@@ -191,12 +191,20 @@ const AddQuiz: React.FC = () => {
           </Button>
         </Toolbar>
       </AppBar>
-      <div style={{ display: "flex", margin: "10px" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          margin: "10px",
+          marginTop: 10,
+          justifyContent: "center",
+        }}
+      >
         <Box
           sx={{
             margin: "10px",
-            marginTop: 10,
-            width: "50%",
+            width: "45%",
+            minWidth: "400px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -293,8 +301,8 @@ const AddQuiz: React.FC = () => {
         <Box
           sx={{
             margin: "10px",
-            marginTop: 10,
-            width: "50%",
+            width: "45%",
+            minWidth: "400px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -419,7 +427,7 @@ const AddQuiz: React.FC = () => {
             </Alert>
           </Snackbar>
         </Box>
-      </div>
+      </Box>
     </>
   );
 };

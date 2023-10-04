@@ -75,15 +75,6 @@ const EmployeeTable = () => {
             justifyContent: "center",
           }}
         >
-          <Typography
-            variant="h6"
-            component="div"
-            color={"#2196f3"}
-            margin={"auto"}
-          >
-            EMPLOYEE TABLE
-          </Typography>
-          <hr />
           <TableContainer
             component={Paper}
             style={{

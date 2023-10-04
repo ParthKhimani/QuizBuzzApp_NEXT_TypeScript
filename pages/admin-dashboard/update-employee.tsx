@@ -22,7 +22,6 @@ const defaultTheme = createTheme();
 const UpdateEmployee = () => {
   const [technology, setTechnology] = useState("");
   const router = useRouter();
-  // const employeeData = JSON.parse((router.query.data as string) || "");
 
   let employeeTechnology: Technology = {
     _id: "",

@@ -63,15 +63,6 @@ const ManagerTable = () => {
             justifyContent: "center",
           }}
         >
-          <Typography
-            variant="h6"
-            component="div"
-            color={"#2196f3"}
-            margin={"auto"}
-          >
-            MANAGER TABLE
-          </Typography>
-          <hr />
           <TableContainer
             component={Paper}
             style={{ width: "75%", margin: "auto" }}
