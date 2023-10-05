@@ -80,3 +80,9 @@ export interface MySignUpValue {
   password: string;
   technology: string;
 }
+
+export interface AddScorePayload {
+  quizIndex: string;
+  answers: Answer[];
+  employee: string;
+}

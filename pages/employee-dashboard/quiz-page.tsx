@@ -7,12 +7,13 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { Question, Answer } from "@/types";
-import { useQuery } from "@tanstack/react-query";
-import { GetQuizDataFn } from "../api/apis";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AddScoreFn, GetQuizDataFn } from "../api/apis";
 import Cookies from "js-cookie";
 
 const QuizPage = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [error, setError] = useState("");
   const quizIndex = String(router.query.quizIndex);
@@ -22,6 +23,15 @@ const QuizPage = () => {
     queryKey: ["quiz", quizIndex, employee],
     queryFn: () => GetQuizDataFn(quizIndex, employee),
   });
+
+  const addScoreMutation = useMutation(
+    (mutationVariables: string) => AddScoreFn(mutationVariables),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries;
+      },
+    }
+  );
 
   const questionValue: Question[] = quizQuery.data?.quiz?.questions?.map(
     (questionObject: Question) => ({
@@ -53,20 +63,16 @@ const QuizPage = () => {
 
   const handleSubmit = () => {
     if (answers.length === quizQuery.data?.quiz?.questions?.length) {
-      router.push({
-        pathname: "/employee-dashboard",
-        query: { employee: employee },
-      });
-      fetch("http://localhost:3333/add-score", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-        body: JSON.stringify({
+      addScoreMutation.mutate(
+        JSON.stringify({
           quizIndex: quizIndex,
           answers: answers,
           employee: employee,
-        }),
+        })
+      );
+      router.push({
+        pathname: "/employee-dashboard",
+        query: { employee: employee },
       });
     } else {
       setError("*Please attempt all the questions!");

@@ -7,7 +7,14 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useRouter } from "next/router";
-import { FormControl, Grid, Link, Radio } from "@mui/material";
+import {
+  FormControl,
+  FormControlLabel,
+  Grid,
+  Link,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { AdminLoginFn, ManagerLoginFn, EmployeeLoginFn } from "./api/apis";
@@ -123,30 +130,35 @@ const CommonDashboard = () => {
           </Typography>
           <FormControl fullWidth>
             <Box onSubmit={formik.handleSubmit} component="form" noValidate>
-              <Radio
-                checked={role === "admin"}
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                name="radio-buttons-group"
                 onChange={handleChange}
-                value="admin"
-                name="radio-buttons"
-                inputProps={{ "aria-label": "A" }}
-              />
-              <label>Admin</label>
-              <Radio
-                checked={role === "manager"}
-                onChange={handleChange}
-                value="manager"
-                name="radio-buttons"
-                inputProps={{ "aria-label": "A" }}
-              />
-              <label>Manager</label>
-              <Radio
-                checked={role === "employee"}
-                onChange={handleChange}
-                value="employee"
-                name="radio-buttons"
-                inputProps={{ "aria-label": "A" }}
-              />
-              <label>Employee</label>
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  "@media (min-width: 600px)": {
+                    flexDirection: "row",
+                  },
+                }}
+              >
+                <FormControlLabel
+                  value="admin"
+                  control={<Radio />}
+                  label="Admin"
+                />
+                <FormControlLabel
+                  value="manager"
+                  control={<Radio />}
+                  label="Manager"
+                />
+                <FormControlLabel
+                  value="employee"
+                  control={<Radio />}
+                  label="Employee"
+                  sx={{ mr: 0 }}
+                />
+              </RadioGroup>
               <hr />
               <TextField
                 margin="normal"

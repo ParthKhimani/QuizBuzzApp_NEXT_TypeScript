@@ -1,4 +1,9 @@
-import { MyLoginValue, MySignUpValue, Question, Technology } from "@/types";
+import {
+  MyLoginValue,
+  MySignUpValue,
+  Question,
+  AddScorePayload,
+} from "@/types";
 import Cookies from "js-cookie";
 import "dotenv/config";
 
@@ -338,7 +343,6 @@ export const GetTechnologiesFn = async () => {
 };
 
 export const AddQuizFn = async (questions: Question[], technology: string) => {
-  console.log(questions, technology);
   const quiz = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/add-quiz`, {
     method: "POST",
     headers: new Headers({
@@ -349,4 +353,25 @@ export const AddQuizFn = async (questions: Question[], technology: string) => {
   });
   const quizData = await quiz.json();
   return quizData;
+};
+
+export const AddScoreFn = async (mutationVariables: string) => {
+  const quizIndex = JSON.parse(mutationVariables).quizIndex;
+  const answers = JSON.parse(mutationVariables).answers;
+  const employee = JSON.parse(mutationVariables).employee;
+
+  const result = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/add-score`, {
+    method: "POST",
+    headers: new Headers({
+      auth: Cookies.get("token") as string,
+      "Content-Type": "application/json;charset=utf-8",
+    }),
+    body: JSON.stringify({
+      quizIndex: quizIndex,
+      answers: answers,
+      employee: employee,
+    }),
+  });
+  const responseData = await result.json();
+  return responseData;
 };
