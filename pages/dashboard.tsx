@@ -12,6 +12,7 @@ import {
   FormControlLabel,
   Grid,
   Link,
+  Paper,
   Radio,
   RadioGroup,
 } from "@mui/material";
@@ -110,14 +111,17 @@ const CommonDashboard = () => {
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
+          component={Paper}
           sx={{
             marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            justifyContent: "center",
             boxShadow: 8,
             padding: 5,
             borderRadius: "8px",
+            opacity: 0.8,
           }}
         >
           <QuizIcon style={{ margin: " 10px" }} color="primary" />

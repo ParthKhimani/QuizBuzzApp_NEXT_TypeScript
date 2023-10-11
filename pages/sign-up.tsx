@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useRouter } from "next/router";
-import { FormHelperText, Grid, Link } from "@mui/material";
+import { FormHelperText, Grid, Link, Paper } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -82,6 +82,7 @@ const SignUp = () => {
       >
         <CssBaseline />
         <Box
+          component={Paper}
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -90,6 +91,7 @@ const SignUp = () => {
             boxShadow: 8,
             padding: 5,
             borderRadius: "8px",
+            opacity: 0.8,
           }}
         >
           <QuizIcon style={{ margin: " 10px" }} color="primary" />

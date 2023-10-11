@@ -80,6 +80,7 @@ const EmployeeTable = () => {
             style={{
               width: "75%",
               margin: "auto",
+              opacity: 0.8,
             }}
           >
             <Table

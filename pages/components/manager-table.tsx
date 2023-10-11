@@ -65,7 +65,7 @@ const ManagerTable = () => {
         >
           <TableContainer
             component={Paper}
-            style={{ width: "75%", margin: "auto" }}
+            style={{ width: "75%", margin: "auto", opacity: 0.8 }}
           >
             <Table
               sx={{ minWidth: 650 }}

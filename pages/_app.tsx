@@ -4,6 +4,7 @@ import {
   QueryClient,
   Hydrate,
 } from "@tanstack/react-query";
+import "../styles/global.css";
 
 const queryClient = new QueryClient();
 
