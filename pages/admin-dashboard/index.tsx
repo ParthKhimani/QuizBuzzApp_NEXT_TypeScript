@@ -54,21 +54,21 @@ const AdminDashboard = () => {
           }}
         >
           <Button
-            variant="outlined"
+            variant="contained"
             style={{ margin: " 10px" }}
             onClick={() => router.replace("/admin-dashboard/add-manager")}
           >
             Add Manager
           </Button>
           <Button
-            variant="outlined"
+            variant="contained"
             style={{ margin: "10px" }}
             onClick={() => router.replace("/admin-dashboard/add-employee")}
           >
             Add Employee
           </Button>
           <Button
-            variant="outlined"
+            variant="contained"
             style={{ margin: "10px" }}
             onClick={() => router.replace("/admin-dashboard/add-quiz")}
           >

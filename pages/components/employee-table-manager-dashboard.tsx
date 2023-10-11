@@ -141,9 +141,11 @@ const EmployeeTableManagerDashboard = () => {
                           </Button>
                           <Button
                             onClick={() => {
-                              deleteEmployeeMutation.mutate(
-                                JSON.stringify(item)
-                              );
+                              const confirmation = confirm("Are you sure ?");
+                              if (confirmation)
+                                deleteEmployeeMutation.mutate(
+                                  JSON.stringify(item)
+                                );
                             }}
                           >
                             <DeleteIcon />

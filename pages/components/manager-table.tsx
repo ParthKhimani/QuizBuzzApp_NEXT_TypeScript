@@ -94,7 +94,11 @@ const ManagerTable = () => {
                         </Button>
                         <Button
                           onClick={() => {
-                            deleteManagerMutation.mutate(JSON.stringify(item));
+                            const confirmation = confirm("Are you sure ?");
+                            if (confirmation)
+                              deleteManagerMutation.mutate(
+                                JSON.stringify(item)
+                              );
                           }}
                         >
                           <DeleteIcon />
