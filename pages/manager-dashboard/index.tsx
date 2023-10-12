@@ -50,7 +50,7 @@ const ManagerDashboard = () => {
           style={{ display: "flex", justifyContent: "center", margin: "10px" }}
         >
           <Button
-            variant="outlined"
+            variant="contained"
             style={{ margin: "10px" }}
             onClick={() => {
               router.replace("/manager-dashboard/add-employee");
@@ -59,7 +59,7 @@ const ManagerDashboard = () => {
             Add Employee
           </Button>
           <Button
-            variant="outlined"
+            variant="contained"
             style={{ margin: "10px" }}
             onClick={() => {
               router.replace("/manager-dashboard/add-quiz");
@@ -68,14 +68,6 @@ const ManagerDashboard = () => {
             Add Quiz
           </Button>
         </div>
-        <Typography
-          variant="h6"
-          component="div"
-          color={"#2196f3"}
-          textAlign={"center"}
-        >
-          EMPLOYEE TABLE
-        </Typography>
         <EmployeeTableManagerDashboard />
       </Box>
     </>

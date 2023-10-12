@@ -1,6 +1,7 @@
 body {
+  background-image: url("../public/bg2.jpg");
   /* background-image: url("../public/bg.avif"); */
-  background-image: url("../public/bg.jpg");
+  /* background-image: url("../public/bg.jpg"); */
   background-repeat: no-repeat;
   background-size: cover;
   background-color: rgba(0, 0, 0, 0.5);

@@ -14,6 +14,7 @@ import HighChart from "../components/high-chart";
 import Cookies from "js-cookie";
 import { JwtPayload } from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
+import { CircularProgress } from "@mui/material";
 
 const EmployeeDashboard = () => {
   const router = useRouter();
@@ -160,20 +161,17 @@ const EmployeeDashboard = () => {
         <div
           style={{ display: "flex", justifyContent: "center", margin: "10px" }}
         >
-          <Typography variant="h6" component="div" color="#2196f3">
+          <Typography variant="h6" component="div">
             No. of quizzes assigned to you:{" "}
-            {quizDataQuery.data?.quiz?.quizes?.length}
+            {quizDataQuery.data?.quiz?.quizes
+              ? quizDataQuery.data?.quiz?.quizes?.length
+              : 0}
           </Typography>
         </div>
         {quizDataQuery.isLoading && (
-          <Typography
-            variant="h3"
-            component="div"
-            color="#2196f3"
-            style={{ textAlign: "center" }}
-          >
-            Loading...
-          </Typography>
+          <div style={{ display: "flex" }}>
+            <CircularProgress style={{ margin: "auto" }} />
+          </div>
         )}
         <div
           style={{

@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -70,101 +71,114 @@ const EmployeeTableManagerDashboard = () => {
 
   return (
     <>
-      <br />
-      {employeeQuery?.data?.data?.filter(
-        (item: Employee) => managerTechnology === item.technology.name
-      ).length > 0 ? (
-        <>
-          <TableContainer
-            component={Paper}
-            style={{
-              width: "75%",
-              margin: "auto",
-              opacity: 0.8,
-            }}
-          >
-            <Table
-              sx={{ minWidth: 650 }}
-              size="small"
-              aria-label="a dense table"
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell>Employee's mail Id</TableCell>
-                  <TableCell>Technology</TableCell>
-                  <TableCell>Scored in Quizes</TableCell>
-                  <TableCell>Assign Quiz</TableCell>
-                  <TableCell>Action</TableCell>
-                </TableRow>
-              </TableHead>
-              {employeeQuery?.data?.data?.map(
-                (item: Employee, index: React.Key | null | undefined) => (
-                  <TableBody>
-                    {managerTechnology === item.technology.name && (
-                      <TableRow key={index}>
-                        <TableCell
-                          rowSpan={employeeQuery.data.data?.quizes?.length}
-                        >
-                          {item.emailId}
-                        </TableCell>
-                        <TableCell
-                          rowSpan={employeeQuery.data.data?.quizes?.length}
-                        >
-                          {item.technology.name}
-                        </TableCell>
-                        {item?.quizes?.length === 0 && (
-                          <TableCell>
-                            Assign a Quiz to check the score !
-                          </TableCell>
-                        )}
-                        {item?.quizes?.length !== 0 && (
-                          <TableCell>
-                            <QuizDataForEmployeeTable item={item} />
-                          </TableCell>
-                        )}
-                        <TableCell>
-                          <Button
-                            value={JSON.stringify(item)}
-                            onClick={handleAssignQuiz}
-                          >
-                            <AssignmentIcon />
-                          </Button>
-                        </TableCell>
-                        <TableCell
-                          rowSpan={employeeQuery.data.data?.quizes?.length}
-                        >
-                          <Button
-                            onClick={handleUpdateEmployee}
-                            value={JSON.stringify(item)}
-                          >
-                            <EditIcon />
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              const confirmation = confirm("Are you sure ?");
-                              if (confirmation)
-                                deleteEmployeeMutation.mutate(
-                                  JSON.stringify(item)
-                                );
-                            }}
-                          >
-                            <DeleteIcon />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                )
-              )}
-            </Table>
-          </TableContainer>
-        </>
-      ) : (
-        <div
-          style={{ fontWeight: "bolder", textAlign: "center", color: "red" }}
-        >
-          *No candidates assigned in your technology yet !
+      {employeeQuery.isLoading && (
+        <div style={{ display: "flex" }}>
+          <CircularProgress style={{ margin: "auto" }} />
         </div>
+      )}
+      {employeeQuery.isFetched && (
+        <>
+          {employeeQuery?.data?.data?.filter(
+            (item: Employee) => managerTechnology === item.technology.name
+          ).length > 0 ? (
+            <>
+              <TableContainer
+                component={Paper}
+                style={{
+                  width: "75%",
+                  margin: "auto",
+                  opacity: 0.8,
+                }}
+              >
+                <Table
+                  sx={{ minWidth: 650 }}
+                  size="small"
+                  aria-label="a dense table"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Employee's mail Id</TableCell>
+                      <TableCell>Technology</TableCell>
+                      <TableCell>Scored in Quizes</TableCell>
+                      <TableCell>Assign Quiz</TableCell>
+                      <TableCell>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {employeeQuery?.data?.data?.map(
+                    (item: Employee, index: React.Key | null | undefined) => (
+                      <TableBody>
+                        {managerTechnology === item.technology.name && (
+                          <TableRow key={index}>
+                            <TableCell
+                              rowSpan={employeeQuery.data.data?.quizes?.length}
+                            >
+                              {item.emailId}
+                            </TableCell>
+                            <TableCell
+                              rowSpan={employeeQuery.data.data?.quizes?.length}
+                            >
+                              {item.technology.name}
+                            </TableCell>
+                            {item?.quizes?.length === 0 && (
+                              <TableCell>
+                                Assign a Quiz to check the score !
+                              </TableCell>
+                            )}
+                            {item?.quizes?.length !== 0 && (
+                              <TableCell>
+                                <QuizDataForEmployeeTable item={item} />
+                              </TableCell>
+                            )}
+                            <TableCell>
+                              <Button
+                                value={JSON.stringify(item)}
+                                onClick={handleAssignQuiz}
+                              >
+                                <AssignmentIcon color="secondary" />
+                              </Button>
+                            </TableCell>
+                            <TableCell
+                              rowSpan={employeeQuery.data.data?.quizes?.length}
+                            >
+                              <Button
+                                onClick={handleUpdateEmployee}
+                                value={JSON.stringify(item)}
+                              >
+                                <EditIcon />
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  const confirmation =
+                                    confirm("Are you sure ?");
+                                  if (confirmation)
+                                    deleteEmployeeMutation.mutate(
+                                      JSON.stringify(item)
+                                    );
+                                }}
+                              >
+                                <DeleteIcon color="error" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    )
+                  )}
+                </Table>
+              </TableContainer>
+            </>
+          ) : (
+            <div
+              style={{
+                fontWeight: "bolder",
+                textAlign: "center",
+                color: "red",
+              }}
+            >
+              *No candidates assigned in your technology yet !
+            </div>
+          )}
+        </>
       )}
     </>
   );

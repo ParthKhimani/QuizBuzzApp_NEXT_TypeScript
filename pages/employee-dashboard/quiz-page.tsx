@@ -2,7 +2,15 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Button,
+  CircularProgress,
+  Paper,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -109,14 +117,21 @@ const QuizPage = () => {
         </AppBar>
       </Box>
       <Box
+        component={Paper}
         sx={{
           width: "75%",
           margin: "80px auto",
           boxShadow: 8,
           padding: "20px",
           borderRadius: "10px",
+          opacity: 0.8,
         }}
       >
+        {quizQuery.isLoading && (
+          <div style={{ display: "flex" }}>
+            <CircularProgress style={{ margin: "auto" }} />
+          </div>
+        )}
         {questionValue?.map((questionObj, index) => (
           <>
             <Typography variant="h5" component="div" color="#2196f3">
@@ -145,18 +160,20 @@ const QuizPage = () => {
         <span style={{ color: "red", display: "block", margin: "10px" }}>
           {error}
         </span>
-        <Button
-          type="submit"
-          variant="contained"
-          color="success"
-          style={{
-            width: "15%",
-            margin: "10px",
-          }}
-          onClick={handleSubmit}
-        >
-          Submit
-        </Button>
+        {quizQuery.isFetched && (
+          <Button
+            type="submit"
+            variant="contained"
+            color="success"
+            style={{
+              width: "15%",
+              margin: "10px",
+            }}
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+        )}
       </Box>
     </>
   );

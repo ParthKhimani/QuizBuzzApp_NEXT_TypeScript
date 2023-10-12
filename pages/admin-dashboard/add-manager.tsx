@@ -10,7 +10,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { AppBar, Toolbar } from "@mui/material";
+import { AppBar, Paper, Toolbar } from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import { AddManagerFn } from "../api/apis";
@@ -68,11 +68,14 @@ const AddManager = () => {
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box
+            component={Paper}
             sx={{
               marginTop: 10,
+              padding: "30px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              opacity: 0.8,
             }}
           >
             <Typography component="h1" variant="h5">

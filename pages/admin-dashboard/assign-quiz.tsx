@@ -14,6 +14,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  CircularProgress,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -189,21 +190,15 @@ const AssignQuiz = () => {
       </AppBar>
       <Box sx={{ marginTop: 10 }}>
         {quizDataQuery.isLoading && (
-          <Typography
-            variant="h3"
-            component="div"
-            color="#2196f3"
-            style={{ textAlign: "center" }}
-          >
-            Loading...
-          </Typography>
+          <div style={{ display: "flex" }}>
+            <CircularProgress style={{ margin: "auto" }} />
+          </div>
         )}
         {quizDataQuery.isFetched && (
           <>
             <Typography
               variant="h6"
               component="div"
-              color="#2196f3"
               style={{ textAlign: "center" }}
             >
               Quizes found for candidate's relavant technology
@@ -227,7 +222,7 @@ const AssignQuiz = () => {
               }}
             >
               <Button
-                variant="outlined"
+                variant="contained"
                 onClick={() => {
                   router.replace("/admin-dashboard");
                 }}

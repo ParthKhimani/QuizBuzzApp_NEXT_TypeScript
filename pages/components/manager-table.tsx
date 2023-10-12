@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -47,70 +48,56 @@ const ManagerTable = () => {
     <>
       <br />
       {managerQuery.isLoading && (
-        <Typography
-          variant="h3"
-          component="div"
-          color="#2196f3"
-          style={{ textAlign: "center" }}
-        >
-          Loading...
-        </Typography>
+        <div style={{ display: "flex" }}>
+          <CircularProgress style={{ margin: "auto" }} />
+        </div>
       )}
       {managerQuery.isFetched && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
+        <TableContainer
+          component={Paper}
+          style={{ width: "75%", margin: "auto", opacity: 0.8 }}
         >
-          <TableContainer
-            component={Paper}
-            style={{ width: "75%", margin: "auto", opacity: 0.8 }}
-          >
-            <Table
-              sx={{ minWidth: 650 }}
-              size="small"
-              aria-label="a dense table"
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell>Manager's mail Id</TableCell>
-                  <TableCell>Technology Assigned</TableCell>
-                  <TableCell>Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {managerQuery.data?.data?.map(
-                  (item: Manager, index: React.Key | null | undefined) => (
-                    <TableRow key={index}>
-                      <TableCell>{item.emailId}</TableCell>
-                      <TableCell>{item.technology.name}</TableCell>
-                      <TableCell>
-                        <Button
-                          onClick={handleUpdateManager}
-                          value={JSON.stringify(item)}
-                        >
-                          <EditIcon />
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            const confirmation = confirm("Are you sure ?");
-                            if (confirmation)
-                              deleteManagerMutation.mutate(
-                                JSON.stringify(item)
-                              );
-                          }}
-                        >
-                          <DeleteIcon />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  )
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ fontWeight: "bold " }}>
+                  Manager's mail Id
+                </TableCell>
+                <TableCell style={{ fontWeight: "bold " }}>
+                  Technology Assigned
+                </TableCell>
+                <TableCell style={{ fontWeight: "bold " }}>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {managerQuery.data?.data?.map(
+                (item: Manager, index: React.Key | null | undefined) => (
+                  <TableRow key={index}>
+                    <TableCell>{item.emailId}</TableCell>
+                    <TableCell>{item.technology.name}</TableCell>
+                    <TableCell>
+                      <Button
+                        onClick={handleUpdateManager}
+                        value={JSON.stringify(item)}
+                      >
+                        <EditIcon />
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          const confirmation = confirm("Are you sure ?");
+                          if (confirmation)
+                            deleteManagerMutation.mutate(JSON.stringify(item));
+                        }}
+                      >
+                        <DeleteIcon color="error" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
     </>
   );

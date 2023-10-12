@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -59,104 +60,92 @@ const EmployeeTable = () => {
     <>
       <br />
       {employeeQuery.isLoading && (
-        <Typography
-          variant="h3"
-          component="div"
-          color="#2196f3"
-          style={{ textAlign: "center" }}
-        >
-          Loading...
-        </Typography>
+        <div style={{ display: "flex" }}>
+          <CircularProgress style={{ margin: "auto" }} />
+        </div>
       )}
       {employeeQuery.isFetched && (
-        <div
+        <TableContainer
+          component={Paper}
           style={{
-            display: "flex",
-            justifyContent: "center",
+            width: "75%",
+            margin: "auto",
+            opacity: 0.8,
           }}
         >
-          <TableContainer
-            component={Paper}
-            style={{
-              width: "75%",
-              margin: "auto",
-              opacity: 0.8,
-            }}
-          >
-            <Table
-              sx={{ minWidth: 650 }}
-              size="small"
-              aria-label="a dense table"
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell>Employee's mail Id</TableCell>
-                  <TableCell>Technology</TableCell>
-                  <TableCell>Scored in Quizes</TableCell>
-                  <TableCell>Assign Quiz</TableCell>
-                  <TableCell>Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {employeeQuery.data?.data?.map(
-                  (item: Employee, index: React.Key | null | undefined) => (
-                    <TableRow key={index}>
-                      <TableCell
-                        rowSpan={employeeQuery.data.data?.quizes?.length}
-                      >
-                        {item.emailId}
-                      </TableCell>
-                      <TableCell
-                        rowSpan={employeeQuery.data.data?.quizes?.length}
-                      >
-                        {item.technology.name}
-                      </TableCell>
-                      {item?.quizes?.length === 0 && (
-                        <TableCell>
-                          Assign a Quiz to check the score !
-                        </TableCell>
-                      )}
-                      {item?.quizes?.length !== 0 && (
-                        <TableCell>
-                          <QuizDataForEmployeeTable item={item} />
-                        </TableCell>
-                      )}
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ fontWeight: "bold " }}>
+                  Employee's mail Id
+                </TableCell>
+                <TableCell style={{ fontWeight: "bold " }}>
+                  Technology
+                </TableCell>
+                <TableCell style={{ fontWeight: "bold " }}>
+                  Scored in Quizes
+                </TableCell>
+                <TableCell style={{ fontWeight: "bold " }}>
+                  Assign Quiz
+                </TableCell>
+                <TableCell style={{ fontWeight: "bold " }}>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {employeeQuery.data?.data?.map(
+                (item: Employee, index: React.Key | null | undefined) => (
+                  <TableRow key={index}>
+                    <TableCell
+                      rowSpan={employeeQuery.data.data?.quizes?.length}
+                    >
+                      {item.emailId}
+                    </TableCell>
+                    <TableCell
+                      rowSpan={employeeQuery.data.data?.quizes?.length}
+                    >
+                      {item.technology.name}
+                    </TableCell>
+                    {item?.quizes?.length === 0 && (
+                      <TableCell>Assign a Quiz to check the score !</TableCell>
+                    )}
+                    {item?.quizes?.length !== 0 && (
                       <TableCell>
-                        <Button
-                          value={JSON.stringify(item)}
-                          onClick={handleAssignQuiz}
-                        >
-                          <AssignmentIcon />
-                        </Button>
+                        <QuizDataForEmployeeTable item={item} />
                       </TableCell>
-                      <TableCell
-                        rowSpan={employeeQuery.data.data?.quizes?.length}
+                    )}
+                    <TableCell>
+                      <Button
+                        value={JSON.stringify(item)}
+                        onClick={handleAssignQuiz}
                       >
-                        <Button
-                          onClick={handleUpdateEmployee}
-                          value={JSON.stringify(item)}
-                        >
-                          <EditIcon />
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            const confirmation = confirm("Are you sure ?");
-                            if (confirmation)
-                              deleteEmployeeMutation.mutate(
-                                JSON.stringify(item)
-                              );
-                          }}
-                        >
-                          <DeleteIcon />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  )
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
+                        <AssignmentIcon color="secondary" />
+                      </Button>
+                    </TableCell>
+                    <TableCell
+                      rowSpan={employeeQuery.data.data?.quizes?.length}
+                    >
+                      <Button
+                        onClick={handleUpdateEmployee}
+                        value={JSON.stringify(item)}
+                      >
+                        <EditIcon />
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          const confirmation = confirm("Are you sure ?");
+                          if (confirmation)
+                            deleteEmployeeMutation.mutate(JSON.stringify(item));
+                        }}
+                      >
+                        <DeleteIcon color="error" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
     </>
   );

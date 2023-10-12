@@ -10,6 +10,7 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
+  Paper,
   Select,
   SelectChangeEvent,
   Snackbar,
@@ -192,12 +193,14 @@ const AddQuiz: React.FC = () => {
         </Toolbar>
       </AppBar>
       <Box
+        component={Paper}
         sx={{
           display: "flex",
           flexWrap: "wrap",
           margin: "10px",
           marginTop: 10,
           justifyContent: "center",
+          opacity: 0.8,
         }}
       >
         <Box

@@ -1,4 +1,12 @@
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Button,
+  CircularProgress,
+  Paper,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import QuizIcon from "@mui/icons-material/Quiz";
 import { useRouter } from "next/router";
 import { Question } from "@/types";
@@ -60,23 +68,20 @@ const AnswerPage = () => {
         </AppBar>
       </Box>
       <Box
+        component={Paper}
         sx={{
           width: "75%",
           margin: "80px auto",
           boxShadow: 8,
           padding: "20px",
           borderRadius: "10px",
+          opacity: 0.8,
         }}
       >
         {quizQuery.isLoading && (
-          <Typography
-            variant="h3"
-            component="div"
-            color="#2196f3"
-            style={{ textAlign: "center" }}
-          >
-            Loading...
-          </Typography>
+          <div style={{ display: "flex" }}>
+            <CircularProgress style={{ margin: "auto" }} />
+          </div>
         )}
         {questionValue?.map((questionObj, index) => {
           const selectedAnswer = quizQuery.data?.selectedAnswers![index].answer;
