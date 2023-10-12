@@ -1,8 +1,11 @@
-body {
-  background-image: url("../public/bg2.jpg");
-  /* background-image: url("../public/bg.avif"); */
-  /* background-image: url("../public/bg.jpg"); */
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: rgba(0, 0, 0, 0.5);
+body::before {
+  content: "";
+  background: url("/bg2.jpg") no-repeat center center/cover;
+  position: fixed;
+  /* opacity: 0.3; */
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
 }
